@@ -11,6 +11,8 @@ website:
         text: Home
       - href: about.qmd
         text: About my research
+      - href: community.qmd
+        text: Community Ecology
 
 format:
   html:
