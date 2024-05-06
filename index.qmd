@@ -1,5 +1,5 @@
 ---
-title: François Duchenne
+title: Home
 image: images/pic.jpg
 about:
   template: trestles

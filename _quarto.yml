@@ -3,7 +3,7 @@ project:
   output-dir: docs
 
 website:
-  favicon: images/logo2.jpg
+  favicon: images/logo.png
   title: "Francois Duchenne"
   navbar:
     left:
