@@ -1,0 +1,22 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  favicon: img/Darwins_first_tree.jpg
+  title: "François Duchenne"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+  page-footer:
+    left: "Copyright 2024, François Duchenne"
+    right:
+      - icon: github
+        href: https://github.com/f-duchenne
+
+format:
+  html:
+    theme: minty
+    css: styles.css
+    toc: true
