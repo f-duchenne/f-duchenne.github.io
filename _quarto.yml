@@ -3,11 +3,14 @@ project:
   output-dir: docs
 
 website:
+  favicon: images/logo.jpeg
   title: "Francois Duchenne"
   navbar:
     left:
       - href: index.qmd
         text: Home
+      - href: about.qmd
+        text: About my research
 
 format:
   html:
