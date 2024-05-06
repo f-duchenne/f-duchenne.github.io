@@ -17,7 +17,9 @@ about:
 ---
 
 ::: {#hero-heading}
-I am currently a postdoc in the Bartomeus lab, in the Biological Station of Doñana (EBD- CSIC) in Sevilla (Spain). I am funded by Postdoc Mobility grant form the SNF.
+**Community Ecology \| Evolutionary Ecology \| Theoretical Ecology**
+
+I am currently a postdoc in the [Bartomeus lab](https://bartomeuslab.com/), in the Biological Station of Doñana (EBD- CSIC) in Sevilla (Spain). I am funded by [Postdoc Mobility](https://www.snf.ch/en/XIZpfY3iVS5KRRoD/funding/careers/postdoc-mobility) grant form the Swiss National Science Foundation.
 :::
 
 # Education
