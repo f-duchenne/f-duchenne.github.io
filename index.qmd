@@ -22,6 +22,13 @@ about:
 I am currently a postdoc in the [Bartomeus lab](https://bartomeuslab.com/), in the Biological Station of Doñana (EBD- CSIC) in Sevilla (Spain). I am funded by [Postdoc Mobility](https://www.snf.ch/en/XIZpfY3iVS5KRRoD/funding/careers/postdoc-mobility) grant form the Swiss National Science Foundation.
 :::
 
+# Research
+
+My research focuses on understanding the mechanisms structuring and (de-)stabilising natural communities, as well as the anthropogenic perturbations affecting these species assemblages, but I am interested in a wide range of topics in Ecology and Evolution. I mainly use plant-pollinator interactions as a study model, coupled with mechanistic and theoretical approaches to investigate how the distribution of direct and indirect interspecific interactions affects species coexistence. In parallel, I use macro-ecological and empirical approaches to estimate the impact of global changes on the distribution, co-occurrence and evolutionary trajectories of species. This empirical aspect of my research focuses on the statistical analysis of past temporal dynamics to understand the mechanisms and consequences for biodiversity, from species to communities.
+
+![*My research topics are strongly interconnected in a framework that tries to disentangle how global change affect temporal dynamics of biodiversity, from species to communities*](images/schéma_général.png){fig-align="center"}
+
+
 # Education
 
 -   2020 \| PhD in Ecology & Evolution \| Sorbonne University and National Natural History Museum of Paris
