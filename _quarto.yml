@@ -13,6 +13,8 @@ website:
         text: About my research
       - href: community.qmd
         text: Community Ecology
+      - href: globalchange.qmd
+        text: Global change & Biodiversity
 
 format:
   html:
