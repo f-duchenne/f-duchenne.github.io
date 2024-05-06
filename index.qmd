@@ -1,0 +1,39 @@
+---
+title: Community ecologist
+image: img/pic.jpg
+alt-image: ""
+about:
+  template: trestles
+  id: hero-heading
+  links:
+    - icon: mailbox
+      text: Mail
+      href: mailto:francois.duchenne@wsl.ch
+    - icon: google
+      text: Scholar
+      href: https://scholar.google.ch/citations?user=FkZF-4sAAAAJ&hl=en
+    - icon: github
+      text: Github
+      href: https://github.com/alaindanet
+---
+
+:::{#hero-heading}
+
+**Community Ecology | Macro-Ecology | Theoretical Ecology**
+
+I am currently a postdoc in the Bartomeus lab (https://bartomeuslab.com/), in the Biological Station of Doñana (EBD-CSIC) in Sevilla (Spain). I am funded by a Postdo Mobility grant (https://www.snf.ch/en/XIZpfY3iVS5KRRoD/funding/careers/postdoc-mobility). 
+
+:::
+
+# Education
+
+- 2020 | PhD in Ecology & Evolution | Sorbonne University & National History Museum of Paris (MNHN)
+- 2017 | Master in Evolutionary Biology and Ecology | Ecole Normale Supérieure de Paris (ENS Paris)
+- 2014 | BSc in Biology | Ecole Normale Supérieure de Paris (ENS Paris)
+
+# Experience
+
+
+- 2024 | Post-doc Mobility in EBD-CSIC (Sevilla, Spain)
+- 2021-2024 | Postdoc in the Catherine Graham's group at WSL (Switzerland), working on plant-hummingbird interactions (see here and here).
+- 2017-2020 | PhD in Ecology & Evolution, with Colin Fontaine and Elisa Thébault | Sorbonne University & National History Museum of Paris (MNHN)
