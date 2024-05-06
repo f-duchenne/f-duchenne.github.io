@@ -1,11 +1,30 @@
 ---
-title: "francoisduchenne"
+title: Francois Duchenne
+image: images/pic.jpg
+alt-image: ""
+about:
+  template: trestles
+  id: hero-heading
+  links:
+    - icon: mailbox
+      text: Mail
+      href: mailto:francois.duchenne\@wsl.ch
+    - icon: google
+      text: Scholar
+      href: https://scholar.google.ch/citations?user=FkZF-4sAAAAJ&hl=en
+    - icon: github
+      text: Github
+      href: https://github.com/f-duchenne
 ---
 
-This is a Quarto website.
+:::{#hero-heading}
 
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+I am currently a postdoc in the Bartomeus lab, in the Biological Station of Doñana (EBD- CSIC) in Sevilla (Spain). I am funded by Postdoc Mobility grant form the SNF.
 
-```{r}
-1 + 1
-```
+:::
+
+# Education
+
+- 2020 | PhD in Ecology & Evolution | Sorbonne University and National Natural History Museum of Paris 
+- 2017 | Master in Evolutionary Biology and Ecology | Ecole Normale Supérieure de paris (ENS Paris)
+- 2012 | BSc in Biology | Ecole Normale Supérieure de paris (ENS Paris)

@@ -2,7 +2,7 @@ project:
   type: website
 
 website:
-  title: "francoisduchenne"
+  title: "Francois Duchenne"
   navbar:
     left:
       - href: index.qmd
