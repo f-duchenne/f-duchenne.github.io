@@ -10,6 +10,6 @@ All my publications, including my PhD thesis, are [available here](https://www.g
 
 [Macroevolution of the plant--hummingbird pollination system](https://doi.org/10.1111/brv.13094). (2024) Barreto, E., Boehm, M.M.A., Ogutcen, E., Abrahamczyk, S., Kessler, M., Bascompte, J., Dellinger, A.S., Bello, C., Dehling, D.M., Duchenne, F., Kaehler, M., Lagomarsino, L.P., Lohmann, L.G., Maglianesi, M.A., Morlon, H., Muchhala, N., Ornelas, J.F., Perret, M., Salinas, N.R., Smith, S.D., Vamosi, J.C., Varassin, I.G. and Graham, C.H.. *Biological Reviews*
 
-[When cheating turns into a stabilizing mechanism of plant--pollinator communities](https://scholar.google.com/citations?view_op=view_citation&hl=en&user=FkZF-4sAAAAJ&sortby=pubdate&citation_for_view=FkZF-4sAAAAJ:8k81kl-MbHgC). (2023) F Duchenne, S Aubert, E Barreto, E Brenes, MA Maglianesi, T Santander, E Guevara & C H Graham. *Plos Biology* 21 (12), e3002434
+[When cheating turns into a stabilizing mechanism of plant--pollinator communities](https://doi.org/10.1371/journal.pbio.3002434). (2023) F. Duchenne, S. Aubert, E. Barreto, E. Brenes, M. A. Maglianesi, T. Santander, E. Guevara & C. H. Graham. *Plos Biology* 21 (12), e3002434
 
-[Seasonal structure of interactions enhances multidimensional stability of mutualistic networks](https://scholar.google.com/citations?view_op=view_citation&hl=en&user=FkZF-4sAAAAJ&sortby=pubdate&citation_for_view=FkZF-4sAAAAJ:Se3iqnhoufwC) (2022) F Duchenne, RO Wüest, CH Graham. *Proceedings of the Royal Society B* 289 (1982), 20220064
+[Seasonal structure of interactions enhances multidimensional stability of mutualistic networks](https://doi.org/10.1098/rspb.2022.0064) (2022) F. Duchenne, R. O. Wüest, C. H. Graham. *Proceedings of the Royal Society B* 289 (1982), 20220064
