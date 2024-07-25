@@ -7,7 +7,7 @@ about:
   links:
     - icon: mailbox
       text: Mail
-      href: mailto:francois.duchenne@wsl.ch
+      href: mailto:francois.duchenne.bio@gmail.com
     - icon: google
       text: Scholar
       href: https://scholar.google.ch/citations?user=FkZF-4sAAAAJ&hl=en
