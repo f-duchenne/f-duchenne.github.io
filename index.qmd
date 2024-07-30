@@ -1,6 +1,10 @@
 ---
 title: François Duchenne
 image: images/pic.jpg
+format:
+  html:
+    include-in-header:
+      - text: <meta name="google-site-verification" content="EITrN_7I0KJSHQ342E1UCCoLV5BZ2m71r_Xw3Cl_2bo" />
 about:
   template: trestles
   id: hero-heading
@@ -27,7 +31,6 @@ I am currently a postdoc in the [Bartomeus lab](https://bartomeuslab.com/), in t
 My research focuses on understanding the mechanisms structuring and (de-)stabilising natural communities, as well as the anthropogenic perturbations affecting these species assemblages, but I am interested in a wide range of topics in Ecology and Evolution. I mainly use plant-pollinator interactions as a study model, coupled with mechanistic and theoretical approaches to investigate how the distribution of direct and indirect interspecific interactions affects species coexistence. In parallel, I use macro-ecological and empirical approaches to estimate the impact of global changes on the distribution, co-occurrence and evolutionary trajectories of species. This empirical aspect of my research focuses on the statistical analysis of past temporal dynamics to understand the consequences of global change for biodiversity, from species to communities.
 
 ![*My research topics are strongly interconnected in a framework that tries to disentangle how global change affect temporal dynamics of biodiversity, from species to communities*](images/schéma_général.png){fig-align="center"}
-
 
 # Education
 
