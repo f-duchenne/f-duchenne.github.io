@@ -41,5 +41,5 @@ My research focuses on understanding the mechanisms structuring and (de-)stabili
 # Experience
 
 -   2024 - 2026 \| Postdoc Mobility grant (SNSF) in the group of Nacho Bartomeus (EBD-CSIC, Sevilla, Spain)
--   2021 - 2024 \| Postdoc in the group of Catherine Graham at WSl (Zurich, Switzerland)
+-   2021 - 2024 \| Postdoc in the group of Catherine Graham at WSL (Zurich, Switzerland)
 -   2017 - 2020 \| PhD in Ecology & Evolution, supervised by Colin Fontaine (MNHN) & Elisa Thébault (Sorbonne University)
