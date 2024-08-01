@@ -4,7 +4,7 @@ title: "Publications"
 
 All my publications are listed on my [Google Sholar profile](https://scholar.google.ch/citations?user=FkZF-4sAAAAJ&hl=en).
 
-All my publications, including my PhD thesis, are [available here](https://www.google.com/url?q=https%3A%2F%2Fhal.archives-ouvertes.fr%2Fsearch%2Findex%2F%3Fq%3D%252A%26authFullName_s%3DFran%25C3%25A7ois%2BDuchenne&sa=D&sntz=1&usg=AOvVaw0dRglBdnHW8vjFee1vn7ii) in open access.
+All my publications, including my PhD thesis, are [available here](https://cv.hal.science/francois-duchenne) in open access.
 
 # Recent publications
 
