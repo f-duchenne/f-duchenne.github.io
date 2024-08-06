@@ -18,7 +18,7 @@ website:
       - href: globalchange.qmd
         text: Global change & Biodiversity
       - href: publications.qmd
-        text: Publications
+        text: CV & Publications
 
 format:
   html:
