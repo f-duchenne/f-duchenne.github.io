@@ -35,7 +35,7 @@ I am currently a postdoc in the [Bartomeus lab](https://bartomeuslab.com/), in t
 
 ### New paper (July 2024)
 
-🆕**Check out our commentary on the study of Müller et al. (2024):** <https://doi.org/10.1111/icad.12769> 🐝🦟🦗🐞
+🆕 **Check out our commentary on the study of Müller et al. (2024):** <https://doi.org/10.1111/icad.12769> 🐝🦟🦗🐞
 
-We proposed alternative analyses and concluded that weather conditions expolain inter-annual variability, but not the long term decline, in insect biomass.\
+We proposed alternative analyses and concluded that weather conditions explain inter-annual variability, but not the long term decline, in insect biomass.\
 ![](images/abstract-01.png){width="556"}
