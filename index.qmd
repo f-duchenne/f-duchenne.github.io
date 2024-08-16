@@ -18,6 +18,9 @@ about:
     - icon: github
       text: Github
       href: https://github.com/f-duchenne
+    - icon: orcid
+      text: ORCiD
+      href: https://orcid.org/0000-0002-6917-8013
 ---
 
 ::: {#hero-heading}
