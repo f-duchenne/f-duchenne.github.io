@@ -5,7 +5,7 @@ project:
 website:
   favicon: images/logo.png
   title: "François Duchenne"
-  site-url: 'https://f-duchenne.github.io/francoisduchenne.github.io'
+  site-url: 'https://f-duchenne.github.io'
   site-path: '/'
   navbar:
     left:

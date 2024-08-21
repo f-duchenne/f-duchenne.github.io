@@ -1,1 +1,1 @@
-Sitemap: https://f-duchenne.github.io/francoisduchenne.github.io/sitemap.xml
+Sitemap: https://f-duchenne.github.io/sitemap.xml
