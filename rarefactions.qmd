@@ -11,7 +11,7 @@ I struggled a bit to find the answer to my question in the first papers I was lo
 
 Let's imagine 3 different sites, that have exactly the same number of species (*n* = 100) but different abundance distributions. Here I assume that the probability of detection of each species is directly proportional to abundance and thus I will directly draw detection probabilities.\
 
-```{r,warning=FALSE,message=FALSE}
+```{r,warning=FALSE,message=FALSE,eval=F}
 library(dplyr)
 library(ggplot2)
 nbsp=100
@@ -31,9 +31,11 @@ print(pl1)
 
 ```
 
+![](images/rare_chunk1.png)
+
 Then, for each of these three sites I will simulate sampling events. For each sampling event I draw the number of detections for each species in a Binomial distribution, $B(t,p)$, where $t$ is the number of trials (a proxy for the sampling intensity) and $p$ the detection probability of the species. I simulate 10 replicates for different values of sampling intensity and number of sampling events. For each simulations I used the iNEXT *R* function to estimate the asymptotic richness. Here the code of the simulations, with some dirty nested loops and rbinds.\
 
-```{r,warning=FALSE}
+```{r,warning=FALSE,eval=F}
 library(reshape2)
 library(iNEXT)
 # a vector of different sampling effort
@@ -72,7 +74,7 @@ rari=iNEXT(comm,q=0,size=c(50,100,500,1000),datatype ="incidence_raw")
 
 Once this is done, let's have a look at the results.
 
-```{r}
+```{r,eval=F}
 rich_out=subset(rari$AsyEst,Diversity=="Species richness") #extract the predicted richness
 rich_out=merge(rich_out,unique(b[,c("id","site","samp","trial","nbsamp")]),by.x="Assemblage",by.y="id") #adding information about parameters of simulations to that
 
@@ -83,5 +85,7 @@ facet_wrap(~site)+geom_hline(aes(yintercept=nbsp))
 
 pl2
 ```
+
+![](images/rare_chunk2.png)
 
 The estimated richness depends on the abundance distribution, which is relatively fair, because the site with an exponential distribution of abundances have a significant amount of rare species, that could almost be considered as not present. **More problematic, is that the predicted richness depends on sampling pressure. If for uniform distribution (site 3) the method corrected well for sampling effort, it was not the case for more uneven abundance distributions (sites 1 & 2).** Abundance distributions appear to be strongly uneven in nature [@callaghan2023], so this seems to be a real issue.
