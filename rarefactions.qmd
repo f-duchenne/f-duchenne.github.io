@@ -17,7 +17,7 @@ library(ggplot2)
 nbsp=100
 # a pool of species with a detection probability for each
 sp_pool_site1=data.frame(sp=paste0("sp",1:nbsp),prob=exp(-runif(nbsp,0,10)),site="site1")
-sp_pool_site2=data.frame(sp=paste0("sp",1:nbsp),prob=exp(-runif(nbsp,0,3)),site="site2")
+sp_pool_site2=data.frame(sp=paste0("sp",1:nbsp),prob=exp(-runif(nbsp,0,4)),site="site2")
 sp_pool_site3=data.frame(sp=paste0("sp",1:nbsp),prob=runif(nbsp,0,1),site="site3")
 
 sp_pool=rbind(sp_pool_site1,sp_pool_site2,sp_pool_site3) #put all sites together
