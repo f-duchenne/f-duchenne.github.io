@@ -33,7 +33,7 @@ print(pl1)
 
 ![](images/rare_chunk1.png)
 
-Then, for each of these three sites I will simulate sampling events. For each sampling event I draw the number of detections for each species in a Binomial distribution, $B(t,p)$, where $t$ is the number of trials (a proxy for the sampling intensity) and $p$ the detection probability of the species. I simulate 10 replicates for different values of sampling intensity and number of sampling events. For each simulations I used the iNEXT *R* function to estimate the asymptotic richness. Here the code of the simulations, with some dirty nested loops and rbinds.\
+Then, for each of these three sites I will simulate sampling events. For each sampling event I draw the number of detections for each species in a Binomial distribution, $B(t,p)$, where $t$ is the number of trials (a proxy for the sampling intensity) and $p$ the detection probability of the species. I simulate 10 replicates for different values of sampling intensity and number of sampling events. For each simulations I used the iNEXT *R* function to estimate the asymptotic richness. Below is the code of the simulations, with some dirty nested loops and rbinds.\
 
 ```{r,warning=FALSE,eval=F}
 library(reshape2)
@@ -52,7 +52,7 @@ for(si in unique(sp_pool$site)){ #loop over site
 			for(z in 1:i){ # generating sampling events
 				for(j in 1:nbrep){ #loop over replicates
 					vec=c(sapply(pool$prob,function(x){rbinom(1,ii,x)}))
-					resf=rbind(resf,data.frame(sp=rep(pool$sp,vec),samp=ii,nbsamp=i,samp_event=z,site=si,trial=j))
+					resf=rbind(resf,data.frame(sp=rep(pool$sp,vec),samp=ii,nbsamp=i,samp_event=z,site=si,rep=j))
 				}
 			}
 		}
@@ -60,9 +60,9 @@ for(si in unique(sp_pool$site)){ #loop over site
 }
 
 
-b=resf %>% group_by(samp,site,trial,sp,nbsamp,samp_event) %>% count(name ="abund") #aggregate data per species, for each site and simulation parameters
+b=resf %>% group_by(samp,site,rep,sp,nbsamp,samp_event) %>% count(name ="abund") #aggregate data per species, for each site and simulation parameters
 
-b$id=paste(b$site,b$trial,b$nbsamp,b$samp,sep=".") #create a unique id for each simulations
+b$id=paste(b$site,b$rep,b$nbsamp,b$samp,sep=".") #create a unique id for each simulations
 
 comm=split(b, b$id) #creat a list fo community data, one dataframe per simulations
 comm=lapply(comm,function(x){dcast(x,id+sp~samp_event,value.var="abund",fill=0)}) #put each data frame in the right format for iNEXT function
@@ -76,7 +76,7 @@ Once this is done, let's have a look at the results.
 
 ```{r,eval=F}
 rich_out=subset(rari$AsyEst,Diversity=="Species richness") #extract the predicted richness
-rich_out=merge(rich_out,unique(b[,c("id","site","samp","trial","nbsamp")]),by.x="Assemblage",by.y="id") #adding information about parameters of simulations to that
+rich_out=merge(rich_out,unique(b[,c("id","site","samp","rep","nbsamp")]),by.x="Assemblage",by.y="id") #adding information about parameters of simulations to that
 
 pl2=ggplot(data=rich_out,aes(x=as.factor(nbsamp),y=Estimator,color=as.factor(samp)))+geom_boxplot()+xlab("Number of sampling events")+ylab("Richness estimation")+
 theme_bw()+theme(axis.line = element_line(colour = "black"),panel.grid.major = element_blank(),panel.grid.minor = element_blank(),panel.background = element_blank(),plot.title=element_text(size=14,face="bold",hjust = 0),
