@@ -88,4 +88,6 @@ pl2
 
 ![](images/rare_chunk2.png)
 
-The estimated richness depends on the abundance distribution, which is relatively fair, because the site with an exponential distribution of abundances have a significant amount of rare species, that could almost be considered as not present. **More problematic, is that the predicted richness depends on sampling pressure. If for uniform distribution (site 3) the method corrected well for sampling effort, it was not the case for more uneven abundance distributions (sites 1 & 2).** Abundance distributions appear to be strongly uneven in nature [@callaghan2023], so this seems to be a real issue.
+The estimated richness depends on the abundance distribution, which is fair, because the site with an exponential distribution of abundances have a significant amount of rare species, that could almost be considered as not present. More problematic, is that the predicted richness depends on sampling pressure. If for uniform distribution (site 3) the method corrected well for sampling effort, it was not the case for more uneven abundance distributions (sites 1 & 2).
+
+**It seems that having too many rare species make increases the uncertainty of the estimation (boxplots are wider in site 1) and make the method inefficient to correct by the sampling pressure.** Abundance distributions appear to be strongly uneven in nature [@callaghan2023], with quite a high proportion of rare species, so this seems to be a real issue.\
