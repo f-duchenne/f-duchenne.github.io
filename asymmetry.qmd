@@ -1,0 +1,64 @@
+---
+title: "Asymmetric interactions and structural stability"
+bibliography: references.bib
+---
+
+Let's imagine a competitive network with 2 plant species and 2 pollinator. Plants and pollinators interact mutualistically an comepte within guilds. The system can be represented by the following matrix and graph:
+
+$$A=\begin{bmatrix} -1 & -0.5 & 0.5 & 0.5 \\ -0.5 & -1 & 0.5 & 0 \\ 0.5 & 0.5 & -1 & -0.5 \\ 0.5 & 0 & -0.5 & -1  \end{bmatrix}$$
+
+```{r,eval=TRUE,echo=FALSE,warning=FALSE,message=FALSE,error=FALSE}
+library(igraph)
+A=matrix(c(-1,-0.5,0.5,0.5,-0.5,-1,0.5,0,0.5,0.5,-1,-0.5,0.5,0,-0.5,-1),4)
+g=graph_from_adjacency_matrix(abs(t(A)),mode="directed",weighted="yes")
+plot(g)
+
+-solve(A)
+
+A2=matrix(c(-1,-0.5,0.5,0.5,-0.5,-1,0.5,0.5,0.5,0.5,-1,-0.5,0.5,0.5,-0.5,-1),4)
+-solve(A2)
+```
+
+We want to calculate the structural stability of the system, also called $\Omega(A)$. For that we can use the R function from [@song2018] that is the classic function to do the job:
+
+```{r,eval=TRUE,echo=FALSE,warning=FALSE,message=FALSE,error=FALSE}
+library(tidyverse)
+library(mvtnorm)
+library(mgcv)
+Omega<- function(alpha) {
+  S <- nrow(alpha)
+  omega <- function(S, Sigma) {
+    m <- matrix(0, S, 1)
+    a <- matrix(0, S, 1)
+    b <- matrix(Inf, S, 1)
+    d <- pmvnorm(lower = rep(0, S), upper = rep(Inf, S), mean = rep(0, S), sigma = Sigma)
+    out <- d[1]^(1/S)
+    return(out)
+  }
+
+    f <- function(m) class(try(solve(t(m) %*% m), silent = T)) == "matrix"
+    if (f(alpha)[1] == FALSE) {
+      return(0)
+    }else {
+      Sigma <- solve(t(alpha) %*% alpha)
+      return(omega(S, Sigma))
+    }
+}
+```
+
+One would note that in that function the matrix $A$ is not used directly, but is used to calculate a variance-covariance matrix of a multivariate normal distribution. This variance-covariance matrix is $(A^{T}A)^{-1}$. The step $A^{T}A$ produce a symmetric matrix, which is required for the matrix to be variance-covariance matrix, leading to:
+
+$$A^{T}A = \begin{bmatrix} 1.25 & 0.5 \\ 0.5 & 1 \end{bmatrix}$$
+
+```{r}
+tab=expand.grid(seq(-1,1,0.01),seq(-1,1,0.01))
+calcN=function(x){sum(-solve(A)%*%unlist(tab[x,1:2])>0)}
+obj=sapply(1:nrow(tab),calcN)
+sum(obj==2)/nrow(tab)
+Omega(A)
+
+A=matrix(c(-1,-0.5,-0.5,-1),2)
+obj2=sapply(1:nrow(tab),calcN)
+sum(obj2==2)/nrow(tab)
+Omega(A)
+```
