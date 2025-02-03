@@ -8,7 +8,7 @@ All my publications, including my PhD thesis, are [available here](https://cv.ha
 
 # Recent publications
 
-[A probabilistic view of forbidden links: their prevalence and their consequences for the robustness of mutualistic networks](https://doi.org/10.1101/2024.07.04.602032). (submitted) F. Duchenne, E. Barreto, E. A. Guevara, H. Beck, C. Bello, R. Bobato, D. Bôlla, E. Brenes, N. Büttner, A. P. Caron, N. Chaves-Elizondo, M. J. Gavilanes, A. Restrepo-González, J. A. Castro, M. Kaehler, Tiago Machado-de-Souza, Miguel Machnicki-Reis, Andrés Sebastián F. Marcayata, C. G. de Menezes, A. Nieto, R. de Oliveira, R. A. C. de Oliveira, F. Richter, B. G. Rojas, L. L. Romanowski, W. L.de Souza, D. S. Veluza, B. Weinstein, R. Wüest, T. B. Zanata, K. Zuniga, M. A. Maglianesi, T. Santander, I. G. Varassin & C. H. Graham. *Submitted*
+[A probabilistic view of forbidden links: their prevalence and their consequences for the robustness of mutualistic networks](https://doi.org/10.1101/2024.07.04.602032). (2025) F. Duchenne, E. Barreto, E. A. Guevara, H. Beck, C. Bello, R. Bobato, D. Bôlla, E. Brenes, N. Büttner, A. P. Caron, N. Chaves-Elizondo, M. J. Gavilanes, A. Restrepo-González, J. A. Castro, M. Kaehler, Tiago Machado-de-Souza, Miguel Machnicki-Reis, Andrés Sebastián F. Marcayata, C. G. de Menezes, A. Nieto, R. de Oliveira, R. A. C. de Oliveira, F. Richter, B. G. Rojas, L. L. Romanowski, W. L.de Souza, D. S. Veluza, B. Weinstein, R. Wüest, T. B. Zanata, K. Zuniga, M. A. Maglianesi, T. Santander, I. G. Varassin & C. H. Graham. *Ecology Letters*
 
 [Weather explains inter-annual variability, but not the temporal decline, in insect biomass](https://doi.org/10.1111/icad.12769). (2024) F. Duchenne & C. Fontaine. *Insect Conservation and Diversity*
 

@@ -50,7 +50,7 @@ One would note that in that function the matrix $A$ is not used directly, but is
 
 $$A^{T}A = \begin{bmatrix} 1.25 & 0.5 \\ 0.5 & 1 \end{bmatrix}$$
 
-```{r}
+```{r,eval=FALSE}
 tab=expand.grid(seq(-1,1,0.01),seq(-1,1,0.01))
 calcN=function(x){sum(-solve(A)%*%unlist(tab[x,1:2])>0)}
 obj=sapply(1:nrow(tab),calcN)

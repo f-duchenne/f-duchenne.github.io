@@ -31,6 +31,14 @@ I am currently a postdoc in the [Bartomeus lab](https://bartomeuslab.com/), in t
 
 # News
 
+### New paper (January 2025)
+
+🆕 **Check out our new paper on plant-hummingbirds interactions:** <https://doi.org/10.1111/ele.70073> (also accessible [here](https://doi.org/10.1101/2024.07.04.602032))
+
+![Collared Inca (Ecuador - 2022)](images/Collared%20Inca%20-%20Guango%20lodge%20-%2021.04.2022-01.jpg){width="451"}\
+
+Analysing 32 plant--hummingbird communities, we found evidence for forbidden links in all of them, with a proportion varying from 3% to 29% of the possible interactions. Where they were in high proportion (\> 15%), forbidden links decreased substantially the robustness to extinctions because of constraints on interaction rewiring. Our results suggest that forbidden links are not rare in plant--hummingbird communities and have the potential to limit the rescue of species experiencing partner extinction.
+
 ### New preprint (August 2024)
 
 🆕 **Coevolution and temporal dynamics of species interactions shape species coexistence** 🌻🐝\
