@@ -18,7 +18,7 @@ authors:
     affiliation: 
       - name: Estación Biológica de Doñana
 abstract: >
-  This document present the dataset, methods and results of the SAFEGUARD project that aims to assess pollinator temporal trends at European level. First, we present the dataset and the associated challenges to succeed to unravel the population trends of european pollinators from opportunistic data that have not been collected for that. Second, we present how we used occupancy models to overcome possible bias. Third, we present the preliminary results of these model, showing the occupancy trends for XX species and comparing the 5 major biogeographic regions of Europe.
+  This document present the dataset, methods and results of the SAFEGUARD project that aims to assess pollinator temporal trends at European level. First, we present the dataset and the associated challenges to succeed to unravel the population trends of european pollinators from opportunistic data that have not been collected for that. Second, we present how we used occupancy models to overcome possible bias. Third, we present the preliminary results of these model, showing the occupancy trends for ~480 species and comparing the 5 major biogeographic regions of Europe.
   
 bibliography: references.bib
 format:
@@ -219,7 +219,7 @@ The observation model describes detection/non-detection events in region *r*, gr
 
 Finally, to the observation model, we added a nested random effect of the month on of the survey *v* within the region *r* ($\Theta_{r,month_v}$) to model phenological variation in detection probability across months and regions, and a random effect of the year ($\Theta_j$) to absorb temporal variation in detection probability of the focal species.
 
-When using a linear temporal trend and a logit function, it has been shown that the slope of that temporal trend ($\theta_r$) is the logarithm of the growth rate ($\rho$) [@duchenne_controversy_2022]. Thus $\rho_r=e^{\theta_r}$, where $\rho=1$ means a stale occupancy probability,$\rho<1$ a decrease and $\rho>1$ a temporal increase in occupancy probability. To get a more intuitive measure of growth rate, we decided to express this growth rate in $\pm \%.year^{-1}$ we used: $\rho_r=100 \times (e^{\theta_r}-1)$.
+When using a linear temporal trend and a logit function, it has been shown that the slope of that temporal trend ($\theta_r$) is the logarithm of the growth rate ($\rho$) [@duchenne_controversy_2022]. Thus $\rho_r=e^{\theta_r}$, where $\rho=1$ means a stale occupancy probability, $\rho<1$ a decrease and $\rho>1$ a temporal increase in occupancy probability. To get a more intuitive measure of growth rate, we decided to express this growth rate in $\pm \%.year^{-1}$ we used: $\rho_r=100 \times (e^{\theta_r}-1)$.
 
 ### Non-linear temporal changes in occupancy {#sec-stat_nl}
 
@@ -275,7 +275,7 @@ nb_combi=nrow(trendsf)
 
 ```
 
-For `r nb_not_converged` species, occupancy trends could not be estimated properly because the model did not converge, regardless the algorithm used to optimize the model ("*nlimb*", "*Nelder-Mead*", "*BFGS*", "*CG*" or "*L-BFGS-B*"). Most often these convergence problems are due to positive values in the Hessian Matrix, likely due to a flat likelihood profile. This means that a broad diversity of parameter combination are consistent with the observations, and thus that the data do not contain enough information to infer spatio-temporal patterns of occupancy in a reliable way. These problems of convergence tended to occur slightly more often when the occupancy of the species was detected in very few surveys (i.e. rare species, @fig-convergence). This is a bias that our study, and other similar studies have faced [@duchenne_long-term_2020 @powney_widespread_2019]: we do not have enough historical data to model occupancy trends of the species that became rare or extinct before recent times. Thus our occupancy trends do not include these strong historical declines that are likely an important components when estimating the effect of past global change on biodiversity.This is a source of under-estimation of effects of global change on biodiversity that is important to keep in mind.
+For `r nb_not_converged` species, occupancy trends could not be estimated properly because the model did not converge, regardless the algorithm used to optimize the model ("*nlimb*", "*Nelder-Mead*", "*BFGS*", "*CG*" or "*L-BFGS-B*"). Most often these convergence problems are due to positive values in the Hessian Matrix, likely due to a flat likelihood profile. This means that a broad diversity of parameter combination are consistent with the observations, and thus that the data do not contain enough information to infer spatio-temporal patterns of occupancy in a reliable way. These problems of convergence tended to occur slightly more often when the occupancy of the species was detected in very few surveys (i.e. rare species, @fig-convergence). This is a bias that our study, and other similar studies have faced [@duchenne_long-term_2020; @powney_widespread_2019]: we do not have enough historical data to model occupancy trends of the species that became rare or extinct before recent times. Thus our occupancy trends do not include these strong historical declines that are likely an important components when estimating the effect of past global change on biodiversity.This is a source of under-estimation of effects of global change on biodiversity that is important to keep in mind.
 
 These problems of convergence might be possible to solve in the future, by subsampling the dataset to focus on the core of the species area only, but it is for now a work in progress. It would also make the comparison across species slightly more difficult.
 
@@ -380,7 +380,7 @@ trendsf$looser[trendsf$trend<0 & trendsf$significant=="yes"]=1
 
 tabi=trendsf %>% group_by(region_50) %>% summarise(prop_looser=round(sum(looser)/length(looser),2),prop_winner=round(sum(winner)/length(winner),2))
 
-names(tabi)=c("Region","Proportion of losers","Proportion of Winners")
+names(tabi)=c("Region","Proportion of losers","Proportion of winners")
 
 knitr::kable(tabi,format = "html",caption="Porpotion of winners and losers per biogeogrpahic region")
 
@@ -415,7 +415,7 @@ pl7
 
 ```
 
-When looking at how the median of the occupancy probability varies over time, we notice an historical decline in the Boreal, Continental and Atlantic regions, followed by a recent increase in occupancy probability, in a "U" shaped pattern that is consistent with what we know from other studies [@duchenne_long-term_2020 @carvalheiro_species_2013]. In contrast, alpine region shows a constant increase in median occupancy probability over-time. This is consistent with the displacement of species-rich lowlands bee communities towards higher elevation. Moreover, the fact that the Alpine region does not exhibit the "U" shaped temporal variation in occupancy observed in the Continental and Atlantic regions is consistent with the fact that this historical decline has been driven by agricultural intensification.
+When looking at how the median of the occupancy probability varies over time, we notice an historical decline in the Boreal, Continental and Atlantic regions, followed by a recent increase in occupancy probability, in a "U" shaped pattern that is consistent with what we know from other studies [@duchenne_long-term_2020; @carvalheiro_species_2013]. In contrast, alpine region shows a constant increase in median occupancy probability over-time. This is consistent with the displacement of species-rich lowlands bee communities towards higher elevation. Moreover, the fact that the Alpine region does not exhibit the "U" shaped temporal variation in occupancy observed in the Continental and Atlantic regions is consistent with the fact that this historical decline has been driven by agricultural intensification.
 
 Finally, Mediterranean region shows a slight increase in median occupancy probability but the temporal pattern is rather unclear and variation is weak, probably due to the lack of historical data in that region.
 
