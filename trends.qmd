@@ -213,7 +213,7 @@ logit(p_{rijv}) &=\beta_1 + \beta_2 \times sampling \space completeness_{ijv} + 
 \end{align} 
 $$ {#eq-obs}
 
-The state model describes the true (unknown) occupancy of the species ($z_{rij}=0$, absent or $z_{rij}=1$, present). $\Psi_{rij}$ is the probability of occupancy in region *r*, grid cell *i* at year *j*. This probability is modeled using a logit link function, as a function of a global intercept $\beta_0$, a fixed linear effect of the time for each region *r* (\tau\_r) and a random site effect ($\Theta_{i}$).
+The state model describes the true (unknown) occupancy of the species ($z_{rij}=0$, absent or $z_{rij}=1$, present). $\Psi_{rij}$ is the probability of occupancy in region *r*, grid cell *i* at year *j*. This probability is modeled using a logit link function, as a function of a global intercept $\beta_0$, a fixed linear effect of the time for each region *r* ($\tau_r$) and a random site effect ($\Theta_{i}$).
 
 The observation model describes detection/non-detection events in region *r*, grid cell *i*, time period *j*, and survey *v* ($y_{rijv}$), conditionally to the true occupancy state ($z_{rij}$). It models the detection status of the focal species (1 or 0) . $p_{rijv}$ is the estimated detection probability, modelled as a function of an intercept $\beta_1$, a fixed effect ($\beta_2$) of the sampling completeness.Our measure of sampling completeness was simply the logarithm of the number of species detected during survey *v*. This index was centered per region to remove the correlation with regional species richness. Because we log transformed the number of species detected, this effect captures whether during a survey, one, few or more species were detected, which mainly depends on the sampling pressure [@isaac2014].
 
