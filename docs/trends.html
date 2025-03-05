@@ -336,6 +336,67 @@ z_{rij} \sim Bernouilli(\Psi_{rij}); logit(\Psi_{rij})=\beta_0 + \Theta_{rj} + \
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>model<span class="ot">=</span><span class="fu">glmmTMB</span>(Y<span class="sc">~</span>sampling_completeness<span class="sc">+</span>(<span class="dv">1</span><span class="sc">|</span>year)<span class="sc">+</span>(<span class="dv">1</span><span class="sc">|</span>region<span class="sc">/</span>month),<span class="at">ziformula=</span><span class="sc">~</span>year<span class="sc">*</span>region<span class="sc">+</span>(<span class="dv">1</span><span class="sc">|</span>site),<span class="at">family=</span>binomial,<span class="at">data=</span>dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We fitted this model for all species with at least 10 records in Europe, and that have been detected in at least 5 surveys in a given region. For each species, we removed the biogeographic regions in which the species has been detected in less than 5 surveys. This led to a list of 1,332 species, over the 1,745 species in the dataset.</p>
+<p>Since optimization of the model was tricky, to maxmimize the chance of convergence, we tried 4 different solvers compatible with <em>glmmTMB</em>: <em>nlimb</em>, <em>Nelder-Mead</em>, <em>BFGS</em> and <em>CG</em>. We also tried two different covariance structures for the temporal autocorrelation in the non-linear occupancy model: AR1 and the Ornstein-Uhlenbeck. We run models in the order listed in the <a href="#tbl-opti">Table&nbsp;1</a> and kept the first model that converged.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="tbl-opti" class="anchored">
+<table data-quarto-postprocess="true" class="table table-sm table-striped small">
+<caption>Table&nbsp;1: Order of run for the different combination of solvers and covariance structure during optimization of the model. For the linear we only tried the four different solvers in the order displayed here.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">solver</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">covariance structure</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">order of run</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">nlimb</td>
+<td style="text-align: left;">AR1</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Nelder-Mead</td>
+<td style="text-align: left;">AR1</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BFGS</td>
+<td style="text-align: left;">AR1</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">CG</td>
+<td style="text-align: left;">AR1</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">nlimb</td>
+<td style="text-align: left;">Ornstein-Uhlenbeck</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Nelder-Mead</td>
+<td style="text-align: left;">Ornstein-Uhlenbeck</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BFGS</td>
+<td style="text-align: left;">Ornstein-Uhlenbeck</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">CG</td>
+<td style="text-align: left;">Ornstein-Uhlenbeck</td>
+<td style="text-align: right;">8</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</div>
+</div>
 </section>
 </section>
 </section>
@@ -343,7 +404,7 @@ z_{rij} \sim Bernouilli(\Psi_{rij}); logit(\Psi_{rij})=\beta_0 + \Theta_{rj} + \
 <h1 data-number="3"><span class="header-section-number">3</span> Results</h1>
 <section id="sec-res_conv" class="level2" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="sec-res_conv"><span class="header-section-number">3.1</span> Species with convergence problems</h2>
-<p>For 854 species, occupancy trends could not be estimated properly because the model did not converge, regardless the algorithm used to optimize the model (“<em>nlimb</em>”, “<em>Nelder-Mead</em>”, “<em>BFGS</em>”, “<em>CG</em>” or “<em>L-BFGS-B</em>”). Most often these convergence problems are due to positive values in the Hessian Matrix, likely due to a flat likelihood profile. This means that a broad diversity of parameter combination are consistent with the observations, and thus that the data do not contain enough information to infer spatio-temporal patterns of occupancy in a reliable way. These problems of convergence tended to occur slightly more often when the occupancy of the species was detected in very few surveys (i.e.&nbsp;rare species, <a href="#fig-convergence">Figure&nbsp;4</a>). This is a bias that our study, and other similar studies have faced <span class="citation" data-cites="duchenne_long-term_2020 powney_widespread_2019">(<a href="#ref-duchenne_long-term_2020" role="doc-biblioref">Duchenne et al. 2020</a>; <a href="#ref-powney_widespread_2019" role="doc-biblioref">Powney et al. 2019</a>)</span>: we do not have enough historical data to model occupancy trends of the species that became rare or extinct before recent times. Thus our occupancy trends do not include these strong historical declines that are likely an important components when estimating the effect of past global change on biodiversity.This is a source of under-estimation of effects of global change on biodiversity that is important to keep in mind.</p>
+<p>For 854 species, occupancy trends could not be estimated properly because the model did not converge, regardless the algorithm used to optimize the model (“<em>nlimb</em>”, “<em>Nelder-Mead</em>”, “<em>BFGS</em>” or “<em>CG</em>”). Most often these convergence problems are due to positive values in the Hessian Matrix, likely due to a flat likelihood profile. This means that a broad diversity of parameter combination are consistent with the observations, and thus that the data do not contain enough information to infer spatio-temporal patterns of occupancy in a reliable way. These problems of convergence tended to occur slightly more often when the species was detected in very few surveys (i.e.&nbsp;rare species, <a href="#fig-convergence">Figure&nbsp;4</a>). This is a bias that our study, and other similar studies have faced <span class="citation" data-cites="duchenne_long-term_2020 powney_widespread_2019">(<a href="#ref-duchenne_long-term_2020" role="doc-biblioref">Duchenne et al. 2020</a>; <a href="#ref-powney_widespread_2019" role="doc-biblioref">Powney et al. 2019</a>)</span>: we do not have enough historical data to model occupancy trends of the species that became rare or extinct before recent times. Thus our occupancy trends do not include these strong historical declines that are likely an important components when estimating the effect of past global change on biodiversity. This is a source of under-estimation of effects of global change on biodiversity that is important to keep in mind.</p>
 <p>These problems of convergence might be possible to solve in the future, by subsampling the dataset to focus on the core of the species area only, but it is for now a work in progress. It would also make the comparison across species slightly more difficult.</p>
 <div class="cell">
 <div class="cell-output-display">
@@ -382,11 +443,12 @@ z_{rij} \sim Bernouilli(\Psi_{rij}); logit(\Psi_{rij})=\beta_0 + \Theta_{rj} + \
 </div>
 </div>
 </div>
-<p>Moreover, although most of the region exhibit a positive average occupancy trend, this positive trend is driven by the right-skewness of the distribution (<a href="#fig-histo">Figure&nbsp;5</a>). When looking at the proportion of losers and winners per region, losers are often as common as winners. The only exception is the alpine biogeographic region, in which winners are strongly over-represented. This is consistent with the expectations under a climate warming scenario <span class="citation" data-cites="pradervand_functional_2014">(<a href="#ref-pradervand_functional_2014" role="doc-biblioref">Pradervand et al. 2014</a>)</span>.</p>
+<p>Moreover, although most of the region exhibit a positive average occupancy trend, this positive trend is driven by the right-skewness of the distribution (<a href="#fig-histo">Figure&nbsp;5</a>). When looking at the proportion of losers and winners per region, losers are often as common as winners (<a href="#tbl-lw">Table&nbsp;2</a>). The only exception is the alpine biogeographic region, in which winners are strongly over-represented. This is consistent with the expectations under a climate warming scenario <span class="citation" data-cites="pradervand_functional_2014">(<a href="#ref-pradervand_functional_2014" role="doc-biblioref">Pradervand et al. 2014</a>)</span>.</p>
 <div class="cell">
 <div class="cell-output-display">
+<div id="tbl-lw" class="anchored">
 <table data-quarto-postprocess="true" class="table table-sm table-striped small">
-<caption>Porpotion of winners and losers per biogeogrpahic region</caption>
+<caption>Table&nbsp;2: Porpotion of winners and losers per biogeogrpahic region.</caption>
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">Region</th>
@@ -422,6 +484,7 @@ z_{rij} \sim Bernouilli(\Psi_{rij}); logit(\Psi_{rij})=\beta_0 + \Theta_{rj} + \
 </tr>
 </tbody>
 </table>
+</div>
 
 
 </div>

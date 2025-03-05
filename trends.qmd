@@ -243,6 +243,20 @@ model=glmmTMB(Y~sampling_completeness+(1|year)+(1|region/month),ziformula=~year*
 
 We fitted this model for all species with at least 10 records in Europe, and that have been detected in at least 5 surveys in a given region. For each species, we removed the biogeographic regions in which the species has been detected in less than 5 surveys. This led to a list of `r nb_sp` species, over the `r nb_sp_tot` species in the dataset.
 
+Since optimization of the model was tricky, to maxmimize the chance of convergence, we tried 4 different solvers compatible with *glmmTMB*: *nlimb*, *Nelder-Mead*, *BFGS* and *CG*. We also tried two different covariance structures for the temporal autocorrelation in the non-linear occupancy model: AR1 and the Ornstein-Uhlenbeck. We run models in the order listed in the @tbl-opti and kept the first model that converged.
+
+```{r}
+#| echo: false
+#| eval: true
+#| label: tbl-opti
+#| tbl-cap: Order of run for the different combination of solvers and covariance structure during optimization of the model. For the linear we only tried the four different solvers in the order displayed here.
+tab=expand.grid(solver=c("nlimb","Nelder-Mead", "BFGS", "CG"),"covariance structure"=c("AR1","Ornstein-Uhlenbeck"))
+tab$"order of run"=1:nrow(tab)
+
+knitr::kable(tab,format = "html")
+
+```
+
 # Results {#sec-results}
 
 ## Species with convergence problems {#sec-res_conv}
@@ -269,13 +283,17 @@ nrow(trendsf)
 b=unique(trendsf[,c("species","nb_records_tot","nb_detect_tot","convergence","occ_min")])
 
 trendsf=subset(trendsf,convergence==0)
+
+# species_to_repeat=data.frame(species=unique(tab_spec$TAXON)[!(unique(tab_spec$TAXON) %in% trendsf$species)])
+# fwrite(species_to_repeat,"species_to_repeat.csv")
+
 nb_not_converged=sum(!(unique(tab_spec$TAXON) %in% trendsf$species))
 nb_converged=length(unique(trendsf$species))
 nb_combi=nrow(trendsf)
 
 ```
 
-For `r nb_not_converged` species, occupancy trends could not be estimated properly because the model did not converge, regardless the algorithm used to optimize the model ("*nlimb*", "*Nelder-Mead*", "*BFGS*", "*CG*" or "*L-BFGS-B*"). Most often these convergence problems are due to positive values in the Hessian Matrix, likely due to a flat likelihood profile. This means that a broad diversity of parameter combination are consistent with the observations, and thus that the data do not contain enough information to infer spatio-temporal patterns of occupancy in a reliable way. These problems of convergence tended to occur slightly more often when the occupancy of the species was detected in very few surveys (i.e. rare species, @fig-convergence). This is a bias that our study, and other similar studies have faced [@duchenne_long-term_2020; @powney_widespread_2019]: we do not have enough historical data to model occupancy trends of the species that became rare or extinct before recent times. Thus our occupancy trends do not include these strong historical declines that are likely an important components when estimating the effect of past global change on biodiversity.This is a source of under-estimation of effects of global change on biodiversity that is important to keep in mind.
+For `r nb_not_converged` species, occupancy trends could not be estimated properly because the model did not converge, regardless the algorithm used to optimize the model ("*nlimb*", "*Nelder-Mead*", "*BFGS*" or "*CG*"). Most often these convergence problems are due to positive values in the Hessian Matrix, likely due to a flat likelihood profile. This means that a broad diversity of parameter combination are consistent with the observations, and thus that the data do not contain enough information to infer spatio-temporal patterns of occupancy in a reliable way. These problems of convergence tended to occur slightly more often when the species was detected in very few surveys (i.e. rare species, @fig-convergence). This is a bias that our study, and other similar studies have faced [@duchenne_long-term_2020; @powney_widespread_2019]: we do not have enough historical data to model occupancy trends of the species that became rare or extinct before recent times. Thus our occupancy trends do not include these strong historical declines that are likely an important components when estimating the effect of past global change on biodiversity. This is a source of under-estimation of effects of global change on biodiversity that is important to keep in mind.
 
 These problems of convergence might be possible to solve in the future, by subsampling the dataset to focus on the core of the species area only, but it is for now a work in progress. It would also make the comparison across species slightly more difficult.
 
@@ -303,8 +321,6 @@ pl4
 #| output: false
 
 nb_weird=nrow(subset(trendsf,abs(trend)>=1))
-species_to_repeat=data.frame(species=unique(subset(trendsf,convergence==0 & is.na(sde))$species))
-fwrite(species_to_repeat,"species_to_repeat.csv")
 trendsf=subset(trendsf,abs(trend)<1)
 trendsf$significant="no"
 trendsf$significant[trendsf$trend<0 & (trendsf$trend+1.96*trendsf$sde)<0]="yes"
@@ -366,11 +382,13 @@ pl6
 
 ```
 
-Moreover, although most of the region exhibit a positive average occupancy trend, this positive trend is driven by the right-skewness of the distribution (@fig-histo). When looking at the proportion of losers and winners per region, losers are often as common as winners. The only exception is the alpine biogeographic region, in which winners are strongly over-represented. This is consistent with the expectations under a climate warming scenario [@pradervand_functional_2014].
+Moreover, although most of the region exhibit a positive average occupancy trend, this positive trend is driven by the right-skewness of the distribution (@fig-histo). When looking at the proportion of losers and winners per region, losers are often as common as winners (@tbl-lw). The only exception is the alpine biogeographic region, in which winners are strongly over-represented. This is consistent with the expectations under a climate warming scenario [@pradervand_functional_2014].
 
 ```{r}
 #| echo: false
 #| warning: false
+#| label: tbl-lw
+#| tbl-cap: Porpotion of winners and losers per biogeogrpahic region.
 
 trendsf$winner=0
 trendsf$winner[trendsf$trend>0 & trendsf$significant=="yes"]=1
@@ -382,7 +400,7 @@ tabi=trendsf %>% group_by(region_50) %>% summarise(prop_looser=round(sum(looser)
 
 names(tabi)=c("Region","Proportion of losers","Proportion of winners")
 
-knitr::kable(tabi,format = "html",caption="Porpotion of winners and losers per biogeogrpahic region")
+knitr::kable(tabi,format = "html")
 
 ```
 
@@ -397,6 +415,7 @@ Using the second kind of occupancy model, accounting for non-linearity, describe
 #| fig-cap: Predicted species occupancy across time when using a non-linear model (AR1 process).  The different panels show different species. Error bars are 95% confidence intervals
 
 nonl=fread(paste0(path_data,"results_TMB_nonl.csv"))
+nonl=subset(nonl,convergence==0)
 nonl=subset(nonl,!is.na(std.error))
 #length(unique(nonl$species))
 nonl$years=nonl$x+1920
