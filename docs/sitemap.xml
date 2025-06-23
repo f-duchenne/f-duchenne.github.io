@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://f-duchenne.github.io/rarefactions.html</loc>
-    <lastmod>2025-02-04T07:43:56.824Z</lastmod>
-  </url>
-  <url>
-    <loc>https://f-duchenne.github.io/index.html</loc>
-    <lastmod>2025-03-05T09:11:03.684Z</lastmod>
-  </url>
-  <url>
-    <loc>https://f-duchenne.github.io/community.html</loc>
-    <lastmod>2025-02-04T07:43:51.740Z</lastmod>
-  </url>
-  <url>
-    <loc>https://f-duchenne.github.io/about.html</loc>
-    <lastmod>2025-02-04T07:43:46.402Z</lastmod>
-  </url>
-  <url>
-    <loc>https://f-duchenne.github.io/asymmetry.html</loc>
-    <lastmod>2025-02-04T07:43:51.093Z</lastmod>
-  </url>
-  <url>
-    <loc>https://f-duchenne.github.io/globalchange.html</loc>
-    <lastmod>2025-02-04T07:43:52.378Z</lastmod>
+    <loc>https://f-duchenne.github.io/trends.html</loc>
+    <lastmod>2025-06-23T14:03:02.283Z</lastmod>
   </url>
   <url>
     <loc>https://f-duchenne.github.io/publications.html</loc>
-    <lastmod>2025-02-04T07:43:53.724Z</lastmod>
+    <lastmod>2025-06-23T14:02:53.350Z</lastmod>
   </url>
   <url>
-    <loc>https://f-duchenne.github.io/trends.html</loc>
-    <lastmod>2025-03-05T09:11:00.180Z</lastmod>
+    <loc>https://f-duchenne.github.io/globalchange.html</loc>
+    <lastmod>2025-06-23T14:02:51.944Z</lastmod>
+  </url>
+  <url>
+    <loc>https://f-duchenne.github.io/asymmetry.html</loc>
+    <lastmod>2025-06-23T14:02:50.302Z</lastmod>
+  </url>
+  <url>
+    <loc>https://f-duchenne.github.io/about.html</loc>
+    <lastmod>2025-06-23T14:02:42.856Z</lastmod>
+  </url>
+  <url>
+    <loc>https://f-duchenne.github.io/community.html</loc>
+    <lastmod>2025-06-23T14:02:51.148Z</lastmod>
+  </url>
+  <url>
+    <loc>https://f-duchenne.github.io/index.html</loc>
+    <lastmod>2025-06-23T14:02:52.608Z</lastmod>
+  </url>
+  <url>
+    <loc>https://f-duchenne.github.io/rarefactions.html</loc>
+    <lastmod>2025-06-23T14:02:58.192Z</lastmod>
   </url>
 </urlset>

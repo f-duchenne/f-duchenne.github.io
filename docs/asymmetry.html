@@ -54,26 +54,7 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-}
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -212,7 +193,7 @@ div.csl-indent {
 [4,]  0.4  0.4 -0.4  1.6</code></pre>
 </div>
 </div>
-<p>We want to calculate the structural stability of the system, also called <span class="math inline">\(\Omega(A)\)</span>. For that we can use the R function from <span class="citation" data-cites="song2018">(<a href="#ref-song2018" role="doc-biblioref">Song, Rohr, and Saavedra 2018</a>)</span> that is the classic function to do the job:</p>
+<p>We want to calculate the structural stability of the system, also called <span class="math inline">\(\Omega(A)\)</span>. For that we can use the R function from <span class="citation" data-cites="song2018">(<a href="#ref-song2018" role="doc-biblioref"><strong>song2018?</strong></a>)</span> that is the classic function to do the job:</p>
 <p>One would note that in that function the matrix <span class="math inline">\(A\)</span> is not used directly, but is used to calculate a variance-covariance matrix of a multivariate normal distribution. This variance-covariance matrix is <span class="math inline">\((A^{T}A)^{-1}\)</span>. The step <span class="math inline">\(A^{T}A\)</span> produce a symmetric matrix, which is required for the matrix to be variance-covariance matrix, leading to:</p>
 <p><span class="math display">\[A^{T}A = \begin{bmatrix} 1.25 &amp; 0.5 \\ 0.5 &amp; 1 \end{bmatrix}\]</span></p>
 <div class="cell">
@@ -230,12 +211,7 @@ div.csl-indent {
 
 
 
-
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
-<div id="ref-song2018" class="csl-entry" role="listitem">
-Song, Chuliang, Rudolf P. Rohr, and Serguei Saavedra. 2018. <span>“A Guideline to Study the Feasibility Domain of Multi-Trophic and Changing Ecological Communities.”</span> <em>Journal of Theoretical Biology</em> 450 (August): 30–36. <a href="https://doi.org/10.1016/j.jtbi.2018.04.030">https://doi.org/10.1016/j.jtbi.2018.04.030</a>.
-</div>
-</div></section></div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {

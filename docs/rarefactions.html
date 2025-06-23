@@ -54,26 +54,7 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-}
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -193,7 +174,7 @@ div.csl-indent {
 
 <p>Recently, we have been trying to use rarefaction methods to get comparable esitmate of species richness over time. The data had very heterogeneous sampling pressure over time, so just looking at the species richness was not really an option.</p>
 <p>The question came to our mind: what if abundance distribution change over time? is the method working well regardless the species abundance distribution shape?</p>
-<p>I struggled a bit to find the answer to my question in the first papers I was looking at. In the appendix F of <span class="citation" data-cites="chao2014">(<a href="#ref-chao2014" role="doc-biblioref">Chao et al. 2014</a>)</span> some simulations suggest that the outputs of the rarefaction with Hill numbers might depend on distribution of abundances but nothing shocking. I did not find anything about that in the paper describing the iNEXT <em>R</em> package <span class="citation" data-cites="hsieh2016">(<a href="#ref-hsieh2016" role="doc-biblioref">Hsieh, Ma, and Chao 2016</a>)</span>. So I decided to go for a bunch of simulations.</p>
+<p>I struggled a bit to find the answer to my question in the first papers I was looking at. In the appendix F of <span class="citation" data-cites="chao2014">(<a href="#ref-chao2014" role="doc-biblioref"><strong>chao2014?</strong></a>)</span> some simulations suggest that the outputs of the rarefaction with Hill numbers might depend on distribution of abundances but nothing shocking. I did not find anything about that in the paper describing the iNEXT <em>R</em> package <span class="citation" data-cites="hsieh2016">(<a href="#ref-hsieh2016" role="doc-biblioref"><strong>hsieh2016?</strong></a>)</span>. So I decided to go for a bunch of simulations.</p>
 <p>Let’s imagine 3 different sites, that have exactly the same number of species (<em>n</em> = 100) but different abundance distributions. Here I assume that the probability of detection of each species is directly proportional to abundance and thus I will directly draw detection probabilities.<br>
 </p>
 <div class="cell">
@@ -266,23 +247,12 @@ div.csl-indent {
 </div>
 <p><img src="images/rare_chunk2.png" class="img-fluid"></p>
 <p>The estimated richness depends on the abundance distribution, which is fair, because the site with an exponential distribution of abundances have a significant amount of rare species, that could almost be considered as not present. More problematic, is that the predicted richness depends on sampling pressure. If for uniform distribution (site 3) the method corrected well for sampling effort, it was not the case for more uneven abundance distributions (sites 1 &amp; 2).</p>
-<p><strong>It seems that having too many rare species make increases the uncertainty of the estimation (boxplots are wider in site 1) and make the method inefficient to correct by the sampling pressure.</strong> Abundance distributions appear to be strongly uneven in nature <span class="citation" data-cites="callaghan2023">(<a href="#ref-callaghan2023" role="doc-biblioref">Callaghan et al. 2023</a>)</span>, with quite a high proportion of rare species, so this seems to be a real issue.<br>
+<p><strong>It seems that having too many rare species make increases the uncertainty of the estimation (boxplots are wider in site 1) and make the method inefficient to correct by the sampling pressure.</strong> Abundance distributions appear to be strongly uneven in nature <span class="citation" data-cites="callaghan2023">(<a href="#ref-callaghan2023" role="doc-biblioref"><strong>callaghan2023?</strong></a>)</span>, with quite a high proportion of rare species, so this seems to be a real issue.<br>
 </p>
 
 
 
-
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
-<div id="ref-callaghan2023" class="csl-entry" role="listitem">
-Callaghan, Corey T., Luís Borda-de-Água, Roel van Klink, Roberto Rozzi, and Henrique M. Pereira. 2023. <span>“Unveiling Global Species Abundance Distributions.”</span> <em>Nature Ecology &amp; Evolution</em> 7 (10): 1600–1609. <a href="https://doi.org/10.1038/s41559-023-02173-y">https://doi.org/10.1038/s41559-023-02173-y</a>.
-</div>
-<div id="ref-chao2014" class="csl-entry" role="listitem">
-Chao, Anne, Nicholas J. Gotelli, T. C. Hsieh, Elizabeth L. Sander, K. H. Ma, Robert K. Colwell, and Aaron M. Ellison. 2014. <span>“Rarefaction and Extrapolation with Hill Numbers: A Framework for Sampling and Estimation in Species Diversity Studies.”</span> <em>Ecological Monographs</em> 84 (1): 45–67. <a href="https://doi.org/10.1890/13-0133.1">https://doi.org/10.1890/13-0133.1</a>.
-</div>
-<div id="ref-hsieh2016" class="csl-entry" role="listitem">
-Hsieh, T. C., K. H. Ma, and Anne Chao. 2016. <span>“iNEXT: An R Package for Rarefaction and Extrapolation of Species Diversity (Hill Numbers).”</span> Edited by Greg McInerny. <em>Methods in Ecology and Evolution</em> 7 (12): 1451–56. <a href="https://doi.org/10.1111/2041-210x.12613">https://doi.org/10.1111/2041-210x.12613</a>.
-</div>
-</div></section></div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
