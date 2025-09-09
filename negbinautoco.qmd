@@ -88,7 +88,7 @@ ggplot(data=df,aes(x=t,y=abundance,color=ts))+geom_line()+
 
 ```
 
-For now, we thus have two independent parameters, in which we are interested in, that we can use to simulate our time series: the strength of the temporal trend ($r$) and the inter-annual variability ($n$).
+For now, we thus have two independent parameters, in which we are interested in, that we can use to simulate our time series: one controlling for the strength of the temporal trend ($r$) and one controlling for the inter-annual variability ($n$).
 
 ## Incorporating temporal auto-correlation in those simulations {#sec-problem}
 
