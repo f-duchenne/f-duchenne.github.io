@@ -116,7 +116,7 @@ From that we can fill the variance-covariance matrix using $Cov(X, Y) = Corr(X, 
 
 [**What do you think of this implementation? We have seen that some people use a Cholenski decomposition to implement the same autocorrelation but I did not understand why this would be needed? If Cholenski decomposition is needed, what is the rational behind?**]{style="color:green;"}
 
-A problem of our implementation is that now we have two parameters that controls for the inter-annual variability $n$ from the negative binomial and $\sigma$ from the multivariate gaussian. Of course we can increase $n$ to very high value to decrease the variability due to the negative binomial and use $\sigma$ to control for most of the variability, but we did not find it very elegant, because the total variance would still depends on both parameters.
+A problem of our implementation is that now we have two parameters that controls for the inter-annual variability: $n$ from the negative binomial and $\sigma$ from the multivariate gaussian. Of course we can increase $n$ to very high value to decrease the variability due to the negative binomial and use $\sigma$ to control for most of the variability, but we did not find it very elegant, because the total variance would still depends on both parameters.
 
 ```{r}
 #| eval: false
