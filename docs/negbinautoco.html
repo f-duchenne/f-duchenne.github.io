@@ -258,8 +258,8 @@ A_{t} \sim NB(\mu_t,n);
 </section>
 <section id="sec-problem" class="level2">
 <h2 class="anchored" data-anchor-id="sec-problem">Incorporating temporal auto-correlation in those simulations</h2>
-<p>Our headache started when trying to implement temporal-correlation in the time series in the inter-annual variability, in addition to the temporal trend. We were thinking of using a multivariate negative binomial distribution to implement that temporal auto-correlation like we would have do in a gaussian process, but did not find any multivariate negative binomial distribution implemented in R that we could use: <span style="color:green;">did we miss something? is such multivariate distribution straightforward to build?</span></p>
-<p>In the absence of multivariate negative binomial distribution ready to use, we passed through a gaussian process to implement the temporal auto-correlation in the following way:</p>
+<p>Our headache started when trying to implement temporal-correlation in the inter-annual variability. We were thinking of using a multivariate negative binomial distribution to implement that temporal auto-correlation like we would have do in a gaussian process, but we did not find any multivariate negative binomial distribution implemented in R that we could use: <span style="color:green;">did we miss something? is such multivariate distribution straightforward to build?</span></p>
+<p>In the absence of multivariate negative binomial distribution ready to use, we used a gaussian process to implement the temporal auto-correlation in the following way:</p>
 <p><span class="math display">\[
 A_{t} \sim NB(\mu_t,n);
 \]</span></p>
