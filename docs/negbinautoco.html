@@ -218,7 +218,7 @@ A_{t} \sim NB(\mu,n)
 <span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>df,<span class="fu">aes</span>(<span class="at">x=</span>t,<span class="at">y=</span>abundance,<span class="at">color=</span>ts))<span class="sc">+</span><span class="fu">geom_line</span>()<span class="sc">+</span></span>
 <span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept=</span>mu,<span class="at">linetype=</span><span class="st">"dashed"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="negbin-autoco_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid" width="672"></p>
+<p><img src="negbinautoco_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>
@@ -251,7 +251,7 @@ A_{t} \sim NB(\mu_t,n);
 <span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>df,<span class="fu">aes</span>(<span class="at">x=</span>t,<span class="at">y=</span>abundance,<span class="at">color=</span>ts))<span class="sc">+</span><span class="fu">geom_line</span>()<span class="sc">+</span></span>
 <span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept=</span>mu,<span class="at">linetype=</span><span class="st">"dashed"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="negbin-autoco_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
+<p><img src="negbinautoco_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>For now, we thus have two independent parameters, in which we are interested in, that we can use to simulate our time series: the strength of the temporal trend (<span class="math inline">\(r\)</span>) and the inter-annual variability (<span class="math inline">\(n\)</span>).</p>
@@ -271,8 +271,8 @@ log(\mu_t) = log(\mu_0(1+r)^t) +\epsilon_t;
 \]</span></p>
 <p>where <span class="math inline">\(\epsilon_t\)</span> is a temporally auto-correlated noise, drawn in a multivariate normal distribution with a mean 0 and variance-covariance matrix <span class="math inline">\(\Sigma\)</span>.</p>
 <p>We built <span class="math inline">\(\Sigma\)</span> based on an auto-regressive process of order 1 (AR1), in which two consecutive years exhibit a positive correlation <span class="math inline">\(\phi\)</span>. Thus the correlation (<span class="math inline">\(\rho\)</span>) between year <span class="math inline">\(t\)</span> and year <span class="math inline">\(t+k\)</span> would be: <span class="math inline">\(\rho_{t,t+k}=\phi^k\)</span></p>
-<p>From that we can fill the variance-covariance matrix using <span class="math inline">\(Cov(X, Y) = Corr(X, Y) \times StdDev(X)\times StdDev(Y)\)</span>. This general formula translated into <span class="math inline">\(\Sigma_{t,t+k}=\phi^k*\sigma^2\)</span>, where <span class="math inline">\(\sigma\)</span> controls for the importance of the autocorrelated noise and <span class="math inline">\(\phi\)</span> for the strength of the temporal autocorrelation.</p>
-<p><span style="color:green;"><strong>What do you think of this implementation? We have seen that some people use a Cholenski decomposition to implement the same autocorrelation but I did not understand why this would be needed ?</strong></span></p>
+<p>From that we can fill the variance-covariance matrix using <span class="math inline">\(Cov(X, Y) = Corr(X, Y) \times StdDev(X)\times StdDev(Y)\)</span>. This general formula translated into <span class="math inline">\(\Sigma_{t,t+k}=\phi^k \times \sigma^2\)</span>, where <span class="math inline">\(\sigma\)</span> controls for the importance of the autocorrelated noise and <span class="math inline">\(\phi\)</span> for the strength of the temporal autocorrelation.</p>
+<p><span style="color:green;"><strong>What do you think of this implementation? We have seen that some people use a Cholenski decomposition to implement the same autocorrelation but I did not understand why this would be needed? If Cholenski decomposition is needed, what is the rational behind?</strong></span></p>
 <p>A problem of our implementation is that now we have two parameters that controls for the inter-annual variability <span class="math inline">\(n\)</span> from the negative binomial and <span class="math inline">\(\sigma\)</span> from the multivariate gaussian. Of course we can increase <span class="math inline">\(n\)</span> to very high value to decrease the variability due to the negative binomial and use <span class="math inline">\(\sigma\)</span> to control for most of the variability, but we did not find it very elegant, because the total variance would still depends on both parameters.</p>
 
 

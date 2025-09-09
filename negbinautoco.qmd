@@ -20,13 +20,13 @@ $$
 A_{t} \sim NB(p,n)
 $$
 
-where $p$ represents the probability of success and $n$ the number of target success to reach. Thus $NB(p,n)$ represents the number of failures which occur in a sequence of Bernoulli trials before a $n$ successes was reached. 
+where $p$ represents the probability of success and $n$ the number of target success to reach. Thus $NB(p,n)$ represents the number of failures which occur in a sequence of Bernoulli trials before a $n$ successes was reached.
 
-However, this classic parametrization of the negative binomial is not very convenient when talking about species abundance, because parameters don't have a direct meaning. Thus, we used an alternative parametrization of the negative binomial, using its mean: 
+However, this classic parametrization of the negative binomial is not very convenient when talking about species abundance, because parameters don't have a direct meaning. Thus, we used an alternative parametrization of the negative binomial, using its mean:
 
 $$
 A_{t} \sim NB(\mu,n)
-$$ 
+$$
 
 where $\mu$ is the mean abundance around which yearly values vary, with $\mu=n(1-p)/p$. In this parametrization, we can thus control directly the average abundance. For a given average abundance value ($\mu$), the variance ($V$) depends only on $n$ : $V=\mu+\mu^2/n$. The higher $n$, the lower the variance. This allowed us to simulate for different inter-annual variability.
 
@@ -54,7 +54,7 @@ ggplot(data=df,aes(x=t,y=abundance,color=ts))+geom_line()+
 
 ## Simulating temporal trend in abundance
 
-Since we were interested in studying how time series properties affect the robustness of the temporal trend estimation, we implemented temporal trend in our simulation by incorporating a trend in $\mu$, using a geometric series: 
+Since we were interested in studying how time series properties affect the robustness of the temporal trend estimation, we implemented temporal trend in our simulation by incorporating a trend in $\mu$, using a geometric series:
 
 $$
 A_{t} \sim NB(\mu_t,n);
@@ -62,7 +62,7 @@ $$
 
 $$
 \mu_t = \mu_0(1+r)^t
-$$ 
+$$
 
 where $r$ is the growth rate of the population, in $\%.year^{-1}$, and $\mu_0$ is the original abundance.
 
@@ -94,7 +94,7 @@ For now, we thus have two independent parameters, in which we are interested in,
 
 Our headache started when trying to implement temporal-correlation in the time series in the inter-annual variability, in addition to the temporal trend. We were thinking of using a multivariate negative binomial distribution to implement that temporal auto-correlation like we would have do in a gaussian process, but did not find any multivariate negative binomial distribution implemented in R that we could use: [did we miss something? is such multivariate distribution straightforward to build?]{style="color:green;"}
 
-In the absence of multivariate negative binomial distribution ready to use, we passed through a gaussian process to implement the temporal auto-correlation in the following way: 
+In the absence of multivariate negative binomial distribution ready to use, we passed through a gaussian process to implement the temporal auto-correlation in the following way:
 
 $$
 A_{t} \sim NB(\mu_t,n);
@@ -106,18 +106,17 @@ $$
 
 $$
 \epsilon_t \sim \mathcal{N}(0,\Sigma)
-$$ 
+$$
 
 where $\epsilon_t$ is a temporally auto-correlated noise, drawn in a multivariate normal distribution with a mean 0 and variance-covariance matrix $\Sigma$.
 
 We built $\Sigma$ based on an auto-regressive process of order 1 (AR1), in which two consecutive years exhibit a positive correlation $\phi$. Thus the correlation ($\rho$) between year $t$ and year $t+k$ would be: $\rho_{t,t+k}=\phi^k$
 
-From that we can fill the variance-covariance matrix using $Cov(X, Y) = Corr(X, Y) \times StdDev(X)\times StdDev(Y)$. This general formula translated into $\Sigma_{t,t+k}=\phi^k*\sigma^2$, where $\sigma$ controls for the importance of the autocorrelated noise and $\phi$ for the strength of the temporal autocorrelation.
+From that we can fill the variance-covariance matrix using $Cov(X, Y) = Corr(X, Y) \times StdDev(X)\times StdDev(Y)$. This general formula translated into $\Sigma_{t,t+k}=\phi^k \times \sigma^2$, where $\sigma$ controls for the importance of the autocorrelated noise and $\phi$ for the strength of the temporal autocorrelation.
 
-[**What do you think of this implementation? We have seen that some people use a Cholenski decomposition to implement the same autocorrelation but I did not understand why this would be needed ?**]{style="color:green;"}
+[**What do you think of this implementation? We have seen that some people use a Cholenski decomposition to implement the same autocorrelation but I did not understand why this would be needed? If Cholenski decomposition is needed, what is the rational behind?**]{style="color:green;"}
 
 A problem of our implementation is that now we have two parameters that controls for the inter-annual variability $n$ from the negative binomial and $\sigma$ from the multivariate gaussian. Of course we can increase $n$ to very high value to decrease the variability due to the negative binomial and use $\sigma$ to control for most of the variability, but we did not find it very elegant, because the total variance would still depends on both parameters.
-
 
 ```{r}
 #| eval: false
