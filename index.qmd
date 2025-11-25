@@ -31,21 +31,9 @@ I am currently a postdoc in the [Bartomeus lab](https://bartomeuslab.com/), in t
 
 # News
 
-### New paper (January 2025)
+### 🆕 Nectar robbing: what push birds to robb flowers?  
 
-🆕 **Check out our new paper on plant-hummingbirds interactions:** <https://doi.org/10.1111/ele.70073> (also accessible [here](https://doi.org/10.1101/2024.07.04.602032))
+👉<https://doi.org/10.1002/oik.11552>
 
-![Collared Inca (Ecuador - 2022)](images/Collared%20Inca%20-%20Guango%20lodge%20-%2021.04.2022-01.jpg){fig-align="center" width="427"}\
-Analysing 32 plant--hummingbird communities, we found evidence for forbidden links in all of them, with a proportion varying from 3% to 29% of the possible interactions. Where they were in high proportion (\> 15%), forbidden links decreased substantially the robustness to extinctions because of constraints on interaction rewiring. Our results suggest that forbidden links are not rare in plant--hummingbird communities and have the potential to limit the rescue of species experiencing partner extinction.
-
-### New preprint (August 2024)
-
-🆕 **Coevolution and temporal dynamics of species interactions shape species coexistence** 🌻🐝\
-<https://doi.org/10.1101/2024.08.08.607160>
-
-### New paper (July 2024)
-
-🆕 **Check out our commentary on the study of Müller et al. (2024):** <https://doi.org/10.1111/icad.12769> 🐝🦟🦗🐞
-
-We proposed alternative analyses and concluded that weather conditions explain inter-annual variability, but not the long term decline, in insect biomass.\
-![](images/abstract-01.png){fig-align="center" width="446"}
+![](images/flower_humm.jpg){width="501"}\
+In tropical pollination networks, flowerpiercers are often seen as robbers and hummingbirds as legitimate pollinators but here we show that it is not so black and white. Both groups of birds pollinate flowers in a legitimate way when flower and bir dmorphologies are compatibel (bill \< corolla) and when morphologies are compatible (corolla \> bill), both groups shift to robbing, although flowerpiercers shift faster than hummingbirds.
