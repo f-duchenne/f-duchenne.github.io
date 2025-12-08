@@ -6,17 +6,13 @@ All my publications are listed on my [Google Sholar profile](https://scholar.goo
 
 All my publications, including my PhD thesis, are [available here](https://cv.hal.science/francois-duchenne) in open access.
 
-# Recent publications
-
-[Hummingbird flower visitation rates vary with species traits, floral abundance and phenology across bioregions.](https://doi.org/10.1002/oik.11354) (2025) E. Barreto, F. Duchenne, H. Beck, C. Bello, R. Bobato, E. Brenes, D. Bôlla, N. Büttner, A. P. Caron, J. A. Castro, N. Chaves‐Elizondo, M. J. Gavilanes, E. A. Guevara, M. Kaehler, T. Machado‐de‐Souza, M. Machnicki-Reis, A. S. Marcayata‐Fajardo, C. G. de Menezes, A. Nieto, R. de Oliveira, R. AC de Oliveira, A. Restrepo-González, F. Richter, B. G. Rojas, L. L. Romanowski, R. Sánchez-Martín, R. C. da Silva, W. Luiz de Souza, D. S. Veluza, B. Weinstein, R. Wüest, T. B. Zanata, K. Zuniga, T. Santander, M. A. Maglianesi, I. G. Varassin, C. H. Graham. *Oikos*
+# Some of my recent publications
 
 [A probabilistic view of forbidden links: their prevalence and their consequences for the robustness of mutualistic networks](https://doi.org/10.1101/2024.07.04.602032). (2025) F. Duchenne, E. Barreto, E. A. Guevara, H. Beck, C. Bello, R. Bobato, D. Bôlla, E. Brenes, N. Büttner, A. P. Caron, N. Chaves-Elizondo, M. J. Gavilanes, A. Restrepo-González, J. A. Castro, M. Kaehler, Tiago Machado-de-Souza, Miguel Machnicki-Reis, Andrés Sebastián F. Marcayata, C. G. de Menezes, A. Nieto, R. de Oliveira, R. A. C. de Oliveira, F. Richter, B. G. Rojas, L. L. Romanowski, W. L.de Souza, D. S. Veluza, B. Weinstein, R. Wüest, T. B. Zanata, K. Zuniga, M. A. Maglianesi, T. Santander, I. G. Varassin & C. H. Graham. *Ecology Letters*
 
 [Weather explains inter-annual variability, but not the temporal decline, in insect biomass](https://doi.org/10.1111/icad.12769). (2024) F. Duchenne & C. Fontaine. *Insect Conservation and Diversity*
 
 [Macroevolution of the plant--hummingbird pollination system](https://doi.org/10.1111/brv.13094). (2024) E. Barreto, M.M.A. Boehm, E. Ogutcen, S. Abrahamczyk, M. Kessler, J. Bascompte, A.S. Dellinger, C. Bello, D. M. Dehling, F. Duchenne, M. Kaehler, L.P. Lagomarsino, Lohmann, L.G., M.A. Maglianesi, H. Morlon, N. Muchhala, J.F. Ornelas, M. Perret, N.R. Salinas, S.D. Smith, J.C. Vamosi, I. G. Varassin & C. H. Graham. *Biological Reviews*
-
-[Species morphology better predicts plant--hummingbird interactions across elevations than nectar traits](https://doi.org/10.1098/rspb.2024.1279). (2024) M. A. Maglianesi, E. Brenes, N. Chaves-Elizondo, K. Zuniga, A. Castro Jiménez, E. Barreto, F. Duchenne, C. H. Graham. *Proceedings of the Royal Society B* 291 (2031), 20241279
 
 [When cheating turns into a stabilizing mechanism of plant--pollinator communities](https://doi.org/10.1371/journal.pbio.3002434). (2023) F. Duchenne, S. Aubert, E. Barreto, E. Brenes, M. A. Maglianesi, T. Santander, E. Guevara & C. H. Graham. *Plos Biology* 21 (12), e3002434
 
@@ -30,6 +26,7 @@ All my publications, including my PhD thesis, are [available here](https://cv.ha
 
 # Experience
 
--   2024 - 2026 \| Postdoc Mobility grant (SNSF) in the group of Nacho Bartomeus (EBD-CSIC, Sevilla, Spain)
+-   2025 - Present \| Researcher ("Chargé de recherche") at CNRS (SETE, Moulis, France)
+-   2024 - 2025 \| Postdoc Mobility grant (SNSF) in the group of Nacho Bartomeus (EBD-CSIC, Sevilla, Spain)
 -   2021 - 2024 \| Postdoc in the group of Catherine Graham at WSL (Zurich, Switzerland)
 -   2017 - 2020 \| PhD in Ecology & Evolution, supervised by Colin Fontaine (MNHN) & Elisa Thébault (Sorbonne University)
