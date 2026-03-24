@@ -37,4 +37,4 @@ I am a researcher ("chargé de recherche") at CNRS, based in the Theoretical and
 👉<https://doi.org/10.1002/oik.11552>
 
 ![](images/flower_humm.jpg){width="501"}\
-In tropical pollination networks, flowerpiercers are often seen as robbers and hummingbirds as legitimate pollinators but here we show that it is not so black and white. Both groups of birds pollinate flowers in a legitimate way when flower and bir dmorphologies are compatibel (bill \< corolla) and when morphologies are compatible (corolla \> bill), both groups shift to robbing, although flowerpiercers shift faster than hummingbirds.
+In tropical pollination networks, flowerpiercers are often seen as robbers and hummingbirds as legitimate pollinators but here we show that it is not so black and white. Both groups of birds pollinate flowers in a legitimate way when flower and bird morphologies are compatible (bill \< corolla). When bird and plant morphologies are not compatible (corolla \> bill), both groups shift to robbing, although flowerpiercers shift faster than hummingbirds.
