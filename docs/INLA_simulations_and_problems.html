@@ -177,10 +177,6 @@ window.Quarto = {
     <a class="nav-link" href="./publications.html"> 
 <span class="menu-text">CV &amp; Publications</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link active" href="./INLA_simulations_and_problems.html" aria-current="page"> 
-<span class="menu-text">Occupancy models with INLA crash when too many visits per period and sites</span></a>
-  </li>  
 </ul>
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
@@ -198,6 +194,8 @@ window.Quarto = {
   <ul>
   <li><a href="#summary" id="toc-summary" class="nav-link active" data-scroll-target="#summary">Summary</a></li>
   <li><a href="#the-occupancy-model" id="toc-the-occupancy-model" class="nav-link" data-scroll-target="#the-occupancy-model">The occupancy model</a></li>
+  <li><a href="#the-problem" id="toc-the-problem" class="nav-link" data-scroll-target="#the-problem">The problem</a></li>
+  <li><a href="#r-and-inla-versions" id="toc-r-and-inla-versions" class="nav-link" data-scroll-target="#r-and-inla-versions">R and INLA versions</a></li>
   <li><a href="#simulating-data" id="toc-simulating-data" class="nav-link" data-scroll-target="#simulating-data">Simulating data</a></li>
   <li><a href="#implementing-occupancy-models-with-inla" id="toc-implementing-occupancy-models-with-inla" class="nav-link" data-scroll-target="#implementing-occupancy-models-with-inla">Implementing occupancy models with INLA</a></li>
   <li><a href="#the-porportion-of-model-crashing" id="toc-the-porportion-of-model-crashing" class="nav-link" data-scroll-target="#the-porportion-of-model-crashing">The porportion of model crashing</a></li>
@@ -232,7 +230,7 @@ window.Quarto = {
 
 <section id="summary" class="level2">
 <h2 class="anchored" data-anchor-id="summary">Summary</h2>
-<p>We have coded occupancy models using the very nice <a href="https://ecol-stats.github.io/Occupancy-Models-in-INLA-/website/docs/">available tutorials</a> and they have been working fine so far. However, when using datasets with too many visits per year and site we observe that INLA crash almost systematically. Since repeated visits are key in occupancy models (the more replication, the better the estimation of detection probability), we are currently blocked by the fact models crash when including too many visits. Below you will find a code allowing to reproduce that bug. This code simulate datasets with different levels of replication and assess the likelihood of crashing when running INLA occupancy models.</p>
+<p>We have coded occupancy models using the very nice <a href="https://ecol-stats.github.io/Occupancy-Models-in-INLA-/website/docs/">available tutorials</a> and they have been working fine so far. However, when using datasets with too many visits per year and site we observe that INLA crash almost systematically. Our large number of visits per year is linked to the fact that we use opportunistic dataset and not standardised surveys. Since repeated visits are key in occupancy models (the more replication, the better the estimation of detection probability), we are currently blocked by the fact models crash when including too many visits. Below you will find a code allowing to reproduce that bug. This code simulate datasets with different levels of replication and assess the likelihood of crashing when running INLA occupancy models.</p>
 </section>
 <section id="the-occupancy-model" class="level2">
 <h2 class="anchored" data-anchor-id="the-occupancy-model">The occupancy model</h2>
@@ -243,21 +241,67 @@ window.Quarto = {
 <p>Here, <span class="math inline">\(z_{it}\)</span> denotes the occupancy state in site <span class="math inline">\(i\)</span> for year <span class="math inline">\(t\)</span>. <span class="math inline">\(\psi_{it}\)</span> is the associated occupancy probability defined on the logit scale as a linear function of an intercept (<span class="math inline">\(\beta_0\)</span>) and <span class="math inline">\(\omega\)</span>, a spatial Gaussian random field describing the spatial structure in the data.</p>
 <p>The response <span class="math inline">\(y_{ijt}\)</span> is the detection/non-detection data for site <span class="math inline">\(i\)</span>, year <span class="math inline">\(t\)</span> and visit <span class="math inline">\(j\)</span>, given <span class="math inline">\(z_{it}\)</span>. The detection probabilities <span class="math inline">\(p\)</span> are defined on the logit scale as a linear function of <span class="math inline">\(\alpha_0\)</span> (Intercept).</p>
 </section>
+<section id="the-problem" class="level2">
+<h2 class="anchored" data-anchor-id="the-problem">The problem</h2>
+<p>In our study case we have a maximal number of visits per year and site, K (<span class="math inline">\(j=1,...,K\)</span>). Let’s imagine our data are aggregated at month level, the maximal number of visits per year and site is <span class="math inline">\(K=12\)</span>. However, since not all sites are monitored every months every year, then the number of realized visits (<span class="math inline">\(K_{obs}\)</span>) depends on the year and site combination. In our simulations, we varied the average number of realized visits (<span class="math inline">\(\overline{K}_{obs}\)</span>).</p>
+<p>When the average number of realized visits, <span class="math inline">\(\overline{K}_{obs}\)</span>, increased, the probability of the model to crash sharply increased to reach one around <span class="math inline">\(\overline{K}_{obs} = 3\)</span>. Below you will find a code allowing to reproduce that bug.</p>
+</section>
+<section id="r-and-inla-versions" class="level2">
+<h2 class="anchored" data-anchor-id="r-and-inla-versions">R and INLA versions</h2>
+<p>Loading packages and showing R and INLA versions:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(data.table)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(INLA)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fmesher)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(raster)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(spatstat.geom)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>R.version</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>               _                                
+platform       x86_64-w64-mingw32               
+arch           x86_64                           
+os             mingw32                          
+crt            ucrt                             
+system         x86_64, mingw32                  
+status                                          
+major          4                                
+minor          5.2                              
+year           2025                             
+month          10                               
+day            31                               
+svn rev        88974                            
+language       R                                
+version.string R version 4.5.2 (2025-10-31 ucrt)
+nickname       [Not] Part in a Rumble           </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">packageVersion</span>(<span class="st">"INLA"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] '26.5.21'</code></pre>
+</div>
+</div>
+</section>
 <section id="simulating-data" class="level2">
 <h2 class="anchored" data-anchor-id="simulating-data">Simulating data</h2>
 <p>We first define an abitrary spatial domain to simulate data across that domain.</p>
+<p>ART: Approximate Running Time</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define spatial domain</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>win <span class="ot">&lt;-</span> <span class="fu">owin</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">10</span>), <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">10</span>))</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>nc <span class="ot">&lt;-</span> <span class="dv">20</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>nr <span class="ot">&lt;-</span> <span class="dv">20</span> <span class="co">#20*20 means 400 sites</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>Domain <span class="ot">&lt;-</span> <span class="fu">rast</span>(<span class="at">nrows=</span>nr, <span class="at">ncols=</span>nc,</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>               <span class="at">xmax=</span>win<span class="sc">$</span>xrange[<span class="dv">2</span>],<span class="at">xmin=</span>win<span class="sc">$</span>xrange[<span class="dv">1</span>],</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>               <span class="at">ymax =</span> win<span class="sc">$</span>yrange[<span class="dv">2</span>],<span class="at">ymin=</span>win<span class="sc">$</span>yrange[<span class="dv">1</span>])</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">values</span>(Domain) <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">ncell</span>(Domain)</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(Domain)<span class="ot">=</span><span class="st">"cell_id"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define spatial domain</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>win <span class="ot">&lt;-</span> <span class="fu">owin</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">10</span>), <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">10</span>))</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>nc <span class="ot">&lt;-</span> <span class="dv">20</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>nr <span class="ot">&lt;-</span> <span class="dv">20</span> <span class="co">#20*20 means 400 sites</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>Domain <span class="ot">&lt;-</span> <span class="fu">rast</span>(<span class="at">nrows=</span>nr, <span class="at">ncols=</span>nc,</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>               <span class="at">xmax=</span>win<span class="sc">$</span>xrange[<span class="dv">2</span>],<span class="at">xmin=</span>win<span class="sc">$</span>xrange[<span class="dv">1</span>],</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>               <span class="at">ymax =</span> win<span class="sc">$</span>yrange[<span class="dv">2</span>],<span class="at">ymin=</span>win<span class="sc">$</span>yrange[<span class="dv">1</span>])</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="fu">values</span>(Domain) <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">ncell</span>(Domain)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(Domain)<span class="ot">=</span><span class="st">"cell_id"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>We then define a function to simulate data, according to the basic assumption of our occupancy model (stable occupancy and detectability across time, etc.).</p>
 <p>This function has the following arguments:</p>
@@ -308,91 +352,91 @@ window.Quarto = {
 </tbody>
 </table>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>simulate_data<span class="ot">=</span><span class="cf">function</span>(nT, nM,prop_sampled, occ_0, trend, det_prob, nrepli, nrep_avg){ </span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  det_tab_list<span class="ot">=</span><span class="fu">list</span>()</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(repli <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>nrepli){ <span class="co">#loop over the number of datasets to generate</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">#yearly average occupancy (if trend)</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    occs <span class="ot">&lt;-</span> boot<span class="sc">::</span><span class="fu">inv.logit</span>(boot<span class="sc">::</span><span class="fu">logit</span>(occ_0)<span class="sc">+</span><span class="fu">log</span>(trend)<span class="sc">*</span>(<span class="dv">0</span><span class="sc">:</span>(nT<span class="dv">-1</span>))) <span class="co">#yearly occupancy</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    occs_logit <span class="ot">&lt;-</span> boot<span class="sc">::</span><span class="fu">logit</span>(occs)</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="co">#generate species occupancies with spatial autocorrelation</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    distances <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(<span class="fu">dist</span>(<span class="fu">crds</span>(Domain)))</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    cov_mat <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(<span class="fu">exp</span>(<span class="sc">-</span>distances))</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="co">#generate spatially autocorrelated deviation to the mean:</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    random_field <span class="ot">&lt;-</span> <span class="fu">mvrnorm</span>(<span class="dv">1</span>,<span class="at">mu=</span><span class="fu">rep</span>(<span class="dv">0</span>,nr<span class="sc">*</span>nc),cov_mat)</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="co">#generate spatio-temporal occupancy values:</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    occ_tab <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">cell_id=</span><span class="fu">rep</span>(<span class="fu">values</span>(Domain<span class="sc">$</span>cell_id),nT),</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>                         <span class="at">x=</span><span class="fu">rep</span>(<span class="fu">crds</span>(Domain)[,<span class="dv">1</span>],nT),<span class="at">y=</span><span class="fu">rep</span>(<span class="fu">crds</span>(Domain)[,<span class="dv">2</span>],nT),</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>                         <span class="at">proba=</span>boot<span class="sc">::</span><span class="fu">inv.logit</span>(random_field <span class="sc">+</span> <span class="fu">rep</span>(occs_logit, <span class="at">each=</span>nr<span class="sc">*</span>nc) <span class="sc">-</span> <span class="fu">mean</span>(random_field)),</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>                         <span class="at">year=</span><span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>nT,<span class="at">each=</span>nr<span class="sc">*</span>nc))</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="co">#draw real occupancy values:</span></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    occ_tab<span class="sc">$</span>occ <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(nr<span class="sc">*</span>nc<span class="sc">*</span>nT,<span class="dv">1</span>,occ_tab<span class="sc">$</span>proba)</span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    <span class="co">#draw species detection</span></span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    det_tab <span class="ot">=</span> <span class="cn">NULL</span></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>nT){ <span class="co"># a loop over years</span></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>      bidon <span class="ot">&lt;-</span> <span class="fu">subset</span>(occ_tab,year<span class="sc">==</span>i) <span class="co">#take only the year we focus on</span></span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>      <span class="co">#sample randomly some sites</span></span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>      sample_sites <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(bidon),<span class="fu">round</span>(prop_sampled<span class="sc">*</span><span class="fu">nrow</span>(bidon)),<span class="at">replace=</span><span class="cn">FALSE</span>)</span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>      <span class="co">#take only the sites we focused on</span></span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>      bidon <span class="ot">&lt;-</span> bidon[sample_sites,]</span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>      bidon<span class="sc">$</span>nrep <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">+</span><span class="fu">rnbinom</span>(<span class="fu">length</span>(sample_sites),<span class="at">mu=</span>nrep_avg,<span class="at">size=</span><span class="dv">2</span>) <span class="co">#each sampled site is visited at least once + an undefined number of repetition</span></span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>      bidon<span class="sc">$</span>nrep[bidon<span class="sc">$</span>nrep<span class="sc">&gt;=</span>nM]<span class="ot">=</span>nM <span class="co">#if number of repetition exceed maximal number of repetition then truncate</span></span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>          </span>
-<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>        <span class="co">#replicate each site line for each visit</span></span>
-<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>        det_tab1 <span class="ot">&lt;-</span> <span class="fu">do.call</span>(<span class="st">"rbind"</span>,<span class="fu">lapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(bidon),</span>
-<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>            <span class="cf">function</span>(x){<span class="fu">do.call</span>(<span class="st">"rbind"</span>,<span class="fu">replicate</span>(bidon<span class="sc">$</span>nrep[x], bidon[x,],<span class="at">simplify=</span><span class="cn">FALSE</span>))}))</span>
-<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>        <span class="co">#add the ID associated with each visit (not important here but it is in case we include covariates)</span></span>
-<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>        <span class="co"># if we assume visits have the same probability to be realized (a visit = a month)</span></span>
-<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>        det_tab1<span class="sc">$</span>visit_n<span class="ot">=</span><span class="fu">unlist</span>(<span class="fu">sapply</span>(bidon<span class="sc">$</span>nrep,<span class="cf">function</span>(x){<span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>nM,x,<span class="at">replace=</span>F,<span class="at">prob=</span><span class="fu">rep</span>(<span class="dv">1</span><span class="sc">/</span>nM,nM))}))</span>
-<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>        <span class="co">#generate detection </span></span>
-<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>        det_tab1<span class="sc">$</span>detection<span class="ot">=</span>det_tab1<span class="sc">$</span>occ<span class="sc">*</span><span class="fu">rbinom</span>(<span class="fu">nrow</span>(det_tab1),<span class="dv">1</span>,det_prob)</span>
-<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>        <span class="co">#storing parameters:</span></span>
-<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>        det_tab1<span class="sc">$</span>nrep_avg<span class="ot">=</span>nrep_avg</span>
-<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>        det_tab1<span class="sc">$</span>repli<span class="ot">=</span>repli</span>
-<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>        <span class="co">#combine across years</span></span>
-<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>        det_tab<span class="ot">=</span><span class="fu">rbind</span>(det_tab,det_tab1)</span>
-<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>    det_tab_list[[repli]]<span class="ot">=</span>det_tab</span>
-<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(det_tab_list)</span>
-<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>simulate_data<span class="ot">=</span><span class="cf">function</span>(nT, nM,prop_sampled, occ_0, trend, det_prob, nrepli, nrep_avg){ </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  det_tab_list<span class="ot">=</span><span class="fu">list</span>()</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(repli <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>nrepli){ <span class="co">#loop over the number of datasets to generate</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">#yearly average occupancy (if trend)</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    occs <span class="ot">&lt;-</span> boot<span class="sc">::</span><span class="fu">inv.logit</span>(boot<span class="sc">::</span><span class="fu">logit</span>(occ_0)<span class="sc">+</span><span class="fu">log</span>(trend)<span class="sc">*</span>(<span class="dv">0</span><span class="sc">:</span>(nT<span class="dv">-1</span>))) <span class="co">#yearly occupancy</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    occs_logit <span class="ot">&lt;-</span> boot<span class="sc">::</span><span class="fu">logit</span>(occs)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="co">#generate species occupancies with spatial autocorrelation</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    distances <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(<span class="fu">dist</span>(<span class="fu">crds</span>(Domain)))</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    cov_mat <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(<span class="fu">exp</span>(<span class="sc">-</span>distances))</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    <span class="co">#generate spatially autocorrelated deviation to the mean:</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    random_field <span class="ot">&lt;-</span> <span class="fu">mvrnorm</span>(<span class="dv">1</span>,<span class="at">mu=</span><span class="fu">rep</span>(<span class="dv">0</span>,nr<span class="sc">*</span>nc),cov_mat)</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    <span class="co">#generate spatio-temporal occupancy values:</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    occ_tab <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">cell_id=</span><span class="fu">rep</span>(<span class="fu">values</span>(Domain<span class="sc">$</span>cell_id),nT),</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>                         <span class="at">x=</span><span class="fu">rep</span>(<span class="fu">crds</span>(Domain)[,<span class="dv">1</span>],nT),<span class="at">y=</span><span class="fu">rep</span>(<span class="fu">crds</span>(Domain)[,<span class="dv">2</span>],nT),</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>                         <span class="at">proba=</span>boot<span class="sc">::</span><span class="fu">inv.logit</span>(random_field <span class="sc">+</span> <span class="fu">rep</span>(occs_logit, <span class="at">each=</span>nr<span class="sc">*</span>nc) <span class="sc">-</span> <span class="fu">mean</span>(random_field)),</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>                         <span class="at">year=</span><span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>nT,<span class="at">each=</span>nr<span class="sc">*</span>nc))</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    <span class="co">#draw real occupancy values:</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    occ_tab<span class="sc">$</span>occ <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(nr<span class="sc">*</span>nc<span class="sc">*</span>nT,<span class="dv">1</span>,occ_tab<span class="sc">$</span>proba)</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    <span class="co">#draw species detection</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    det_tab <span class="ot">=</span> <span class="cn">NULL</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>nT){ <span class="co"># a loop over years</span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>      bidon <span class="ot">&lt;-</span> <span class="fu">subset</span>(occ_tab,year<span class="sc">==</span>i) <span class="co">#take only the year we focus on</span></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>      <span class="co">#sample randomly some sites</span></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>      sample_sites <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(bidon),<span class="fu">round</span>(prop_sampled<span class="sc">*</span><span class="fu">nrow</span>(bidon)),<span class="at">replace=</span><span class="cn">FALSE</span>)</span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>      <span class="co">#take only the sites we focused on</span></span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>      bidon <span class="ot">&lt;-</span> bidon[sample_sites,]</span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>      bidon<span class="sc">$</span>nrep <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">+</span><span class="fu">rnbinom</span>(<span class="fu">length</span>(sample_sites),<span class="at">mu=</span>nrep_avg,<span class="at">size=</span><span class="dv">2</span>) <span class="co">#each sampled site is visited at least once + an undefined number of repetition</span></span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>      bidon<span class="sc">$</span>nrep[bidon<span class="sc">$</span>nrep<span class="sc">&gt;=</span>nM]<span class="ot">=</span>nM <span class="co">#if number of repetition exceed maximal number of repetition then truncate</span></span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>          </span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>        <span class="co">#replicate each site line for each visit</span></span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>        det_tab1 <span class="ot">&lt;-</span> <span class="fu">do.call</span>(<span class="st">"rbind"</span>,<span class="fu">lapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(bidon),</span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>            <span class="cf">function</span>(x){<span class="fu">do.call</span>(<span class="st">"rbind"</span>,<span class="fu">replicate</span>(bidon<span class="sc">$</span>nrep[x], bidon[x,],<span class="at">simplify=</span><span class="cn">FALSE</span>))}))</span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>        <span class="co">#add the ID associated with each visit (not important here but it is in case we include covariates)</span></span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>        <span class="co"># if we assume visits have the same probability to be realized (a visit = a month)</span></span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>        det_tab1<span class="sc">$</span>visit_n<span class="ot">=</span><span class="fu">unlist</span>(<span class="fu">sapply</span>(bidon<span class="sc">$</span>nrep,<span class="cf">function</span>(x){<span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>nM,x,<span class="at">replace=</span>F,<span class="at">prob=</span><span class="fu">rep</span>(<span class="dv">1</span><span class="sc">/</span>nM,nM))}))</span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a>        <span class="co">#generate detection </span></span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a>        det_tab1<span class="sc">$</span>detection<span class="ot">=</span>det_tab1<span class="sc">$</span>occ<span class="sc">*</span><span class="fu">rbinom</span>(<span class="fu">nrow</span>(det_tab1),<span class="dv">1</span>,det_prob)</span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>        <span class="co">#storing parameters:</span></span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>        det_tab1<span class="sc">$</span>nrep_avg<span class="ot">=</span>nrep_avg</span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a>        det_tab1<span class="sc">$</span>repli<span class="ot">=</span>repli</span>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a>        <span class="co">#combine across years</span></span>
+<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a>        det_tab<span class="ot">=</span><span class="fu">rbind</span>(det_tab,det_tab1)</span>
+<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a>    det_tab_list[[repli]]<span class="ot">=</span>det_tab</span>
+<span id="cb6-58"><a href="#cb6-58" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb6-59"><a href="#cb6-59" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-60"><a href="#cb6-60" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(det_tab_list)</span>
+<span id="cb6-61"><a href="#cb6-61" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>We will use that function to simulate several datasets with different number of repeated visits, keeping other parameters fixed:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">############## FIXED PARAMETERS</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>nT <span class="ot">&lt;-</span> <span class="dv">10</span> <span class="co">#number of years</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>nM <span class="ot">&lt;-</span> <span class="dv">12</span> <span class="co">#maximal number of visits, let's say 12 if data are aggregated at month level</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>prop_sampled <span class="ot">&lt;-</span> <span class="fl">0.2</span> <span class="co">#proportion of sites sampled each year</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#species occupancy probabilities</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>occ_0 <span class="ot">&lt;-</span> <span class="fl">0.5</span> <span class="co">#initial occupancy probability</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>trend <span class="ot">&lt;-</span> <span class="fl">1.0</span> <span class="co">#growth rate: &lt;1 means declining, 1 means stable, &gt;1 means increasing</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">#species detection</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>det_prob <span class="ot">&lt;-</span> <span class="fl">0.2</span> <span class="co">#species detection probability</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>nrepli <span class="ot">&lt;-</span> <span class="dv">10</span> <span class="co"># generate 5 independent datasets perparameter condition</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="do">############## VARYING PARAMETER</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>nrep_avg_vec<span class="ot">=</span><span class="fu">seq</span>(<span class="fl">0.5</span>,<span class="dv">3</span>,<span class="at">by=</span><span class="fl">0.5</span>) <span class="co">#average number of sampling repetition (1 repetition means 2 sampling events in a year)</span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="do">############## SIMULATING DATA</span></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>list_data<span class="ot">=</span><span class="fu">lapply</span>(nrep_avg_vec,<span class="cf">function</span>(x){<span class="fu">simulate_data</span>(nT, nM,prop_sampled, occ_0, trend, det_prob, nrepli, x)})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">############## FIXED PARAMETERS</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>nT <span class="ot">&lt;-</span> <span class="dv">10</span> <span class="co">#number of years</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>nM <span class="ot">&lt;-</span> <span class="dv">12</span> <span class="co">#maximal number of visits, let's say 12 if data are aggregated at month level</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>prop_sampled <span class="ot">&lt;-</span> <span class="fl">0.2</span> <span class="co">#proportion of sites sampled each year</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">#species occupancy probabilities</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>occ_0 <span class="ot">&lt;-</span> <span class="fl">0.5</span> <span class="co">#initial occupancy probability</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>trend <span class="ot">&lt;-</span> <span class="fl">1.0</span> <span class="co">#growth rate: &lt;1 means declining, 1 means stable, &gt;1 means increasing</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">#species detection</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>det_prob <span class="ot">&lt;-</span> <span class="fl">0.2</span> <span class="co">#species detection probability</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>nrepli <span class="ot">&lt;-</span> <span class="dv">10</span> <span class="co"># generate 5 independent datasets perparameter condition</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="do">############## VARYING PARAMETER</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>nrep_avg_vec<span class="ot">=</span><span class="fu">seq</span>(<span class="fl">0.5</span>,<span class="dv">3</span>,<span class="at">by=</span><span class="fl">0.5</span>) <span class="co">#average number of sampling repetition (1 repetition means 2 sampling events in a year)</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="do">############## SIMULATING DATA</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>list_data<span class="ot">=</span><span class="fu">lapply</span>(nrep_avg_vec,<span class="cf">function</span>(x){<span class="fu">simulate_data</span>(nT, nM,prop_sampled, occ_0, trend, det_prob, nrepli, x)})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="implementing-occupancy-models-with-inla" class="level2">
@@ -403,98 +447,98 @@ window.Quarto = {
 X_{det} = \begin{matrix} 1 \\ \vdots \\ M \end{matrix} \overbrace{\begin{pmatrix} 1 &amp; \dots &amp; 1 \\ \vdots &amp; \vdots &amp; \vdots \\ 1 &amp; \dots &amp; 1 \end{pmatrix}}^{\begin{matrix} 1 &amp; \dots &amp; K \end{matrix}}
 \]</span></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>max_fd <span class="ot">&lt;-</span> <span class="cf">function</span>(x){<span class="fu">ifelse</span>(<span class="fu">length</span>(x)<span class="sc">&gt;</span><span class="dv">0</span>,<span class="fu">max</span>(x),<span class="cn">NA</span>)} <span class="co">#personnalized function, return max if it has element, NA otherwise</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># a function running INLA occupancy models</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>run_occupancy_model<span class="ot">=</span><span class="cf">function</span>(det_tab){</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">setDT</span>(det_tab)</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="co">#create the big matrix of number of records per sampling events for all species (work with data table to speed up and save memory):</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  matrix_spat <span class="ot">&lt;-</span> <span class="fu">dcast</span>(det_tab,cell_id<span class="sc">+</span>x<span class="sc">+</span>y<span class="sc">+</span>year<span class="sc">~</span><span class="fu">paste0</span>(<span class="st">"V"</span>,visit_n),<span class="at">value.var=</span><span class="st">"detection"</span>,<span class="at">fun.aggregate=</span>max_fd)</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  ncells <span class="ot">&lt;-</span> <span class="fu">length</span>(matrix_spat<span class="sc">$</span>cell_id <span class="sc">%&gt;%</span> unique)  <span class="co"># number of cells in the whole area</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Convert to sf</span></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  space_data_sf <span class="ot">&lt;-</span> <span class="fu">vect</span>(<span class="fu">unique</span>(matrix_spat[,<span class="fu">c</span>(<span class="st">"x"</span>,<span class="st">"y"</span>,<span class="st">"cell_id"</span>)]),<span class="at">geom=</span><span class="fu">c</span>(<span class="st">'x'</span>,<span class="st">'y'</span>),<span class="at">crs=</span><span class="st">"EPSG:4326"</span>)</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  <span class="do">########### creat the mesh</span></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  boundary_sf <span class="ot">=</span> <span class="fu">st_bbox</span>(space_data_sf) <span class="sc">%&gt;%</span></span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_as_sfc</span>() <span class="sc">%&gt;%</span> <span class="fu">st_as_sf</span>()</span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  mesh <span class="ot">&lt;-</span> <span class="fu">fm_mesh_2d</span>(<span class="at">loc.domain =</span> <span class="fu">st_coordinates</span>(boundary_sf)[,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>],</span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>                <span class="at">max.edge =</span> <span class="fu">c</span>(<span class="dv">15</span>, <span class="dv">30</span>))</span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>  spde <span class="ot">&lt;-</span> <span class="fu">inla.spde2.pcmatern</span>(<span class="at">mesh =</span> mesh,</span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>                          <span class="at">prior.range =</span> <span class="fu">c</span>(<span class="dv">100</span>, <span class="fl">0.5</span>),</span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>                          <span class="at">prior.sigma =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="fl">0.5</span>))</span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>  t_points <span class="ot">&lt;-</span> <span class="fu">unique</span>(matrix_spat<span class="sc">$</span>year)<span class="co"># unique time points</span></span>
-<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>  <span class="co"># index set; "spatialfield" is the name used in the model formula</span></span>
-<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>  iset_sp <span class="ot">&lt;-</span> <span class="fu">inla.spde.make.index</span>(<span class="at">name =</span> <span class="st">"spatialfield"</span>, </span>
-<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>                            <span class="at">n.spde =</span>  spde<span class="sc">$</span>n.spde,</span>
-<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>                            <span class="at">n.group =</span> <span class="fu">length</span>(t_points))</span>
-<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>  <span class="co"># projection matrix using the coordinates of the data and time index</span></span>
-<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>  A_sp <span class="ot">&lt;-</span> <span class="fu">inla.spde.make.A</span>(<span class="at">mesh =</span> mesh,</span>
-<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>                     <span class="at">loc =</span> <span class="fu">as.matrix</span>(matrix_spat[,<span class="fu">c</span>(<span class="st">"x"</span>,<span class="st">"y"</span>)]),</span>
-<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>                     <span class="at">group =</span> matrix_spat<span class="sc">$</span>year)</span>
-<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>  Y_mat <span class="ot">&lt;-</span> matrix_spat <span class="sc">%&gt;%</span></span>
-<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="fu">num_range</span>(<span class="st">"V"</span>,<span class="fu">sort</span>(<span class="fu">unique</span>(det_tab<span class="sc">$</span>visit_n)))) <span class="sc">%&gt;%</span> </span>
-<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.matrix</span>()</span>
-<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>  <span class="co">#detection covariates in the good format (only one intercept):</span></span>
-<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>  matrix_spat<span class="sc">$</span>intercept<span class="ot">=</span><span class="dv">1</span></span>
-<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>  X_det <span class="ot">&lt;-</span> matrix_spat[,<span class="fu">rep</span>(<span class="st">"intercept"</span>,<span class="fu">length</span>(<span class="fu">unique</span>(det_tab<span class="sc">$</span>visit_n))),with<span class="ot">=</span><span class="cn">FALSE</span>] <span class="sc">%&gt;%</span> <span class="fu">as.matrix</span>()</span>
-<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>  <span class="co">#occupancy covariates</span></span>
-<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>  X_cov <span class="ot">&lt;-</span> matrix_spat <span class="sc">%&gt;%</span></span>
-<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="fu">c</span>(year,cell_id))</span>
-<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a>  stk <span class="ot">&lt;-</span> <span class="fu">inla.stack</span>(<span class="at">data=</span><span class="fu">list</span>(<span class="at">Y =</span> Y_mat,  <span class="at">X =</span> X_det),</span>
-<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a>              <span class="at">A=</span><span class="fu">list</span>(A_sp,<span class="dv">1</span>),</span>
-<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a>              <span class="at">effects=</span><span class="fu">list</span>(<span class="fu">c</span>(<span class="fu">list</span>(<span class="at">Int_occ=</span><span class="dv">1</span>), <span class="co">#the Intercept</span></span>
-<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a>                             iset_sp),  <span class="co">#the spatial index</span></span>
-<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a>                           <span class="co">#the covariates</span></span>
-<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">as.list</span>(X_cov)),</span>
-<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a>              <span class="at">tag=</span><span class="st">'spat'</span>)</span>
-<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a>              </span>
-<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a>  formula_spat <span class="ot">&lt;-</span> <span class="fu">inla.mdata</span>(Y,X) <span class="sc">~</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> Int_occ <span class="sc">+</span></span>
-<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a>    <span class="fu">f</span>(spatialfield,</span>
-<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a>    <span class="at">model=</span>spde)</span>
-<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>  <span class="co">#running the model with a trycatch to avoid errors breaking the loop</span></span>
-<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a>  obj <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>({model_spat <span class="ot">&lt;-</span> <span class="fu">inla</span>(formula_spat, <span class="co">#the formula</span></span>
-<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a>           <span class="at">data=</span><span class="fu">inla.stack.data</span>(stk),  <span class="co"># the data stack</span></span>
-<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a>           <span class="at">family=</span> <span class="st">'occupancy'</span>,   <span class="co"># model likelihood</span></span>
-<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a>            <span class="at">control.predictor=</span><span class="fu">list</span>(<span class="at">A=</span><span class="fu">inla.stack.A</span>(stk),<span class="at">compute=</span><span class="cn">TRUE</span>),</span>
-<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a>            <span class="at">control.family =</span> <span class="fu">list</span>(<span class="at">control.link =</span> <span class="fu">list</span>(<span class="at">model =</span> <span class="st">"logit"</span>),</span>
-<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a>                <span class="at">link.simple =</span> <span class="st">"logit"</span>),<span class="at">verbose=</span>F)},<span class="at">error=</span><span class="cf">function</span>(x){<span class="fu">return</span>(<span class="cn">NA</span>)})</span>
-<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a>  rest <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">repli=</span><span class="fu">unique</span>(det_tab<span class="sc">$</span>repli),</span>
-<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a>                  <span class="at">nrep_avg=</span><span class="fu">unique</span>(det_tab<span class="sc">$</span>nrep_avg),</span>
-<span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a>                  <span class="at">run_success=</span><span class="fu">ifelse</span>(<span class="fu">class</span>(obj)<span class="sc">==</span><span class="st">"inla"</span>,<span class="dv">1</span>,<span class="dv">0</span>)) <span class="co">#if model crashed then put 0, if model runs then put 1</span></span>
-<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(rest)</span>
-<span id="cb4-77"><a href="#cb4-77" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-78"><a href="#cb4-78" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>max_fd <span class="ot">&lt;-</span> <span class="cf">function</span>(x){<span class="fu">ifelse</span>(<span class="fu">length</span>(x)<span class="sc">&gt;</span><span class="dv">0</span>,<span class="fu">max</span>(x),<span class="cn">NA</span>)} <span class="co">#personnalized function, return max if it has element, NA otherwise</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># a function running INLA occupancy models</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>run_occupancy_model<span class="ot">=</span><span class="cf">function</span>(det_tab){</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">setDT</span>(det_tab)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="co">#create the big matrix of number of records per sampling events for all species (work with data table to speed up and save memory):</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  matrix_spat <span class="ot">&lt;-</span> <span class="fu">dcast</span>(det_tab,cell_id<span class="sc">+</span>x<span class="sc">+</span>y<span class="sc">+</span>year<span class="sc">~</span><span class="fu">paste0</span>(<span class="st">"V"</span>,visit_n),<span class="at">value.var=</span><span class="st">"detection"</span>,<span class="at">fun.aggregate=</span>max_fd)</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  ncells <span class="ot">&lt;-</span> <span class="fu">length</span>(matrix_spat<span class="sc">$</span>cell_id <span class="sc">%&gt;%</span> unique)  <span class="co"># number of cells in the whole area</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Convert to sf</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  space_data_sf <span class="ot">&lt;-</span> <span class="fu">vect</span>(<span class="fu">unique</span>(matrix_spat[,<span class="fu">c</span>(<span class="st">"x"</span>,<span class="st">"y"</span>,<span class="st">"cell_id"</span>)]),<span class="at">geom=</span><span class="fu">c</span>(<span class="st">'x'</span>,<span class="st">'y'</span>),<span class="at">crs=</span><span class="st">"EPSG:4326"</span>)</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  <span class="do">########### creat the mesh</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  boundary_sf <span class="ot">=</span> <span class="fu">st_bbox</span>(space_data_sf) <span class="sc">%&gt;%</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_as_sfc</span>() <span class="sc">%&gt;%</span> <span class="fu">st_as_sf</span>()</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>  mesh <span class="ot">&lt;-</span> <span class="fu">fm_mesh_2d</span>(<span class="at">loc.domain =</span> <span class="fu">st_coordinates</span>(boundary_sf)[,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>],</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>                <span class="at">max.edge =</span> <span class="fu">c</span>(<span class="dv">15</span>, <span class="dv">30</span>))</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>  spde <span class="ot">&lt;-</span> <span class="fu">inla.spde2.pcmatern</span>(<span class="at">mesh =</span> mesh,</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>                          <span class="at">prior.range =</span> <span class="fu">c</span>(<span class="dv">100</span>, <span class="fl">0.5</span>),</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>                          <span class="at">prior.sigma =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="fl">0.5</span>))</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>  t_points <span class="ot">&lt;-</span> <span class="fu">unique</span>(matrix_spat<span class="sc">$</span>year)<span class="co"># unique time points</span></span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>  <span class="co"># index set; "spatialfield" is the name used in the model formula</span></span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>  iset_sp <span class="ot">&lt;-</span> <span class="fu">inla.spde.make.index</span>(<span class="at">name =</span> <span class="st">"spatialfield"</span>, </span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>                            <span class="at">n.spde =</span>  spde<span class="sc">$</span>n.spde,</span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>                            <span class="at">n.group =</span> <span class="fu">length</span>(t_points))</span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>  <span class="co"># projection matrix using the coordinates of the data and time index</span></span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>  A_sp <span class="ot">&lt;-</span> <span class="fu">inla.spde.make.A</span>(<span class="at">mesh =</span> mesh,</span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>                     <span class="at">loc =</span> <span class="fu">as.matrix</span>(matrix_spat[,<span class="fu">c</span>(<span class="st">"x"</span>,<span class="st">"y"</span>)]),</span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>                     <span class="at">group =</span> matrix_spat<span class="sc">$</span>year)</span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>  Y_mat <span class="ot">&lt;-</span> matrix_spat <span class="sc">%&gt;%</span></span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="fu">num_range</span>(<span class="st">"V"</span>,<span class="fu">sort</span>(<span class="fu">unique</span>(det_tab<span class="sc">$</span>visit_n)))) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.matrix</span>()</span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a>  <span class="co">#detection covariates in the good format (only one intercept):</span></span>
+<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a>  matrix_spat<span class="sc">$</span>intercept<span class="ot">=</span><span class="dv">1</span></span>
+<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a>  X_det <span class="ot">&lt;-</span> matrix_spat[,<span class="fu">rep</span>(<span class="st">"intercept"</span>,<span class="fu">length</span>(<span class="fu">unique</span>(det_tab<span class="sc">$</span>visit_n))),with<span class="ot">=</span><span class="cn">FALSE</span>] <span class="sc">%&gt;%</span> <span class="fu">as.matrix</span>()</span>
+<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a>  <span class="co">#occupancy covariates</span></span>
+<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a>  X_cov <span class="ot">&lt;-</span> matrix_spat <span class="sc">%&gt;%</span></span>
+<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="fu">c</span>(year,cell_id))</span>
+<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-52"><a href="#cb8-52" aria-hidden="true" tabindex="-1"></a>  stk <span class="ot">&lt;-</span> <span class="fu">inla.stack</span>(<span class="at">data=</span><span class="fu">list</span>(<span class="at">Y =</span> Y_mat,  <span class="at">X =</span> X_det),</span>
+<span id="cb8-53"><a href="#cb8-53" aria-hidden="true" tabindex="-1"></a>              <span class="at">A=</span><span class="fu">list</span>(A_sp,<span class="dv">1</span>),</span>
+<span id="cb8-54"><a href="#cb8-54" aria-hidden="true" tabindex="-1"></a>              <span class="at">effects=</span><span class="fu">list</span>(<span class="fu">c</span>(<span class="fu">list</span>(<span class="at">Int_occ=</span><span class="dv">1</span>), <span class="co">#the Intercept</span></span>
+<span id="cb8-55"><a href="#cb8-55" aria-hidden="true" tabindex="-1"></a>                             iset_sp),  <span class="co">#the spatial index</span></span>
+<span id="cb8-56"><a href="#cb8-56" aria-hidden="true" tabindex="-1"></a>                           <span class="co">#the covariates</span></span>
+<span id="cb8-57"><a href="#cb8-57" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">as.list</span>(X_cov)),</span>
+<span id="cb8-58"><a href="#cb8-58" aria-hidden="true" tabindex="-1"></a>              <span class="at">tag=</span><span class="st">'spat'</span>)</span>
+<span id="cb8-59"><a href="#cb8-59" aria-hidden="true" tabindex="-1"></a>              </span>
+<span id="cb8-60"><a href="#cb8-60" aria-hidden="true" tabindex="-1"></a>  formula_spat <span class="ot">&lt;-</span> <span class="fu">inla.mdata</span>(Y,X) <span class="sc">~</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> Int_occ <span class="sc">+</span></span>
+<span id="cb8-61"><a href="#cb8-61" aria-hidden="true" tabindex="-1"></a>    <span class="fu">f</span>(spatialfield,</span>
+<span id="cb8-62"><a href="#cb8-62" aria-hidden="true" tabindex="-1"></a>    <span class="at">model=</span>spde)</span>
+<span id="cb8-63"><a href="#cb8-63" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-64"><a href="#cb8-64" aria-hidden="true" tabindex="-1"></a>  <span class="co">#running the model with a trycatch to avoid errors breaking the loop</span></span>
+<span id="cb8-65"><a href="#cb8-65" aria-hidden="true" tabindex="-1"></a>  obj <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>({model_spat <span class="ot">&lt;-</span> <span class="fu">inla</span>(formula_spat, <span class="co">#the formula</span></span>
+<span id="cb8-66"><a href="#cb8-66" aria-hidden="true" tabindex="-1"></a>           <span class="at">data=</span><span class="fu">inla.stack.data</span>(stk),  <span class="co"># the data stack</span></span>
+<span id="cb8-67"><a href="#cb8-67" aria-hidden="true" tabindex="-1"></a>           <span class="at">family=</span> <span class="st">'occupancy'</span>,   <span class="co"># model likelihood</span></span>
+<span id="cb8-68"><a href="#cb8-68" aria-hidden="true" tabindex="-1"></a>            <span class="at">control.predictor=</span><span class="fu">list</span>(<span class="at">A=</span><span class="fu">inla.stack.A</span>(stk),<span class="at">compute=</span><span class="cn">TRUE</span>),</span>
+<span id="cb8-69"><a href="#cb8-69" aria-hidden="true" tabindex="-1"></a>            <span class="at">control.family =</span> <span class="fu">list</span>(<span class="at">control.link =</span> <span class="fu">list</span>(<span class="at">model =</span> <span class="st">"logit"</span>),</span>
+<span id="cb8-70"><a href="#cb8-70" aria-hidden="true" tabindex="-1"></a>                <span class="at">link.simple =</span> <span class="st">"logit"</span>),<span class="at">verbose=</span>F)},<span class="at">error=</span><span class="cf">function</span>(x){<span class="fu">return</span>(<span class="cn">NA</span>)})</span>
+<span id="cb8-71"><a href="#cb8-71" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-72"><a href="#cb8-72" aria-hidden="true" tabindex="-1"></a>  rest <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">repli=</span><span class="fu">unique</span>(det_tab<span class="sc">$</span>repli),</span>
+<span id="cb8-73"><a href="#cb8-73" aria-hidden="true" tabindex="-1"></a>                  <span class="at">nrep_avg=</span><span class="fu">unique</span>(det_tab<span class="sc">$</span>nrep_avg),</span>
+<span id="cb8-74"><a href="#cb8-74" aria-hidden="true" tabindex="-1"></a>                  <span class="at">run_success=</span><span class="fu">ifelse</span>(<span class="fu">class</span>(obj)<span class="sc">==</span><span class="st">"inla"</span>,<span class="dv">1</span>,<span class="dv">0</span>)) <span class="co">#if model crashed then put 0, if model runs then put 1</span></span>
+<span id="cb8-75"><a href="#cb8-75" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-76"><a href="#cb8-76" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(rest)</span>
+<span id="cb8-77"><a href="#cb8-77" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-78"><a href="#cb8-78" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>We can run the function across all generated datasets.</p>
+<p>We can run the function across all generated datasets. (ART = 25 mn)</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>result_list <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="fu">unlist</span>(list_data,<span class="at">recursive=</span><span class="cn">FALSE</span>),run_occupancy_model)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>result_df <span class="ot">&lt;-</span> <span class="fu">rbindlist</span>(result_list)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>result_list <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="fu">unlist</span>(list_data,<span class="at">recursive=</span><span class="cn">FALSE</span>),run_occupancy_model)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>result_df <span class="ot">&lt;-</span> <span class="fu">rbindlist</span>(result_list)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="the-porportion-of-model-crashing" class="level2">
 <h2 class="anchored" data-anchor-id="the-porportion-of-model-crashing">The porportion of model crashing</h2>
 <p>Finally, we can calculate the percentage of cases in which the model crashed:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>result_df,<span class="fu">aes</span>(<span class="at">x=</span><span class="dv">1</span><span class="sc">+</span>nrep_avg,<span class="at">y=</span><span class="dv">1</span><span class="sc">-</span>run_success))<span class="sc">+</span><span class="fu">stat_summary</span>()<span class="sc">+</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ylab</span>(<span class="st">"proportion of model crashing"</span>)<span class="sc">+</span><span class="fu">xlab</span>(<span class="st">"Average number of visits per site per year"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>result_df,<span class="fu">aes</span>(<span class="at">x=</span><span class="dv">1</span><span class="sc">+</span>nrep_avg,<span class="at">y=</span><span class="dv">1</span><span class="sc">-</span>run_success))<span class="sc">+</span><span class="fu">stat_summary</span>()<span class="sc">+</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ylab</span>(<span class="st">"proportion of model crashing"</span>)<span class="sc">+</span><span class="fu">xlab</span>(<span class="st">"Average number of visits per site per year"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">

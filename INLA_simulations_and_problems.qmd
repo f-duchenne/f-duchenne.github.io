@@ -20,26 +20,9 @@ webr:
 editor: visual
 ---
 
-```{r}
-#| message: false
-#| warning: false
-#| paged-print: false
-#| echo: false
-library(data.table)
-library(INLA)
-library(fmesher)
-library(raster)
-library(dplyr)
-library(sf)
-library(terra)
-library(spatstat.geom)
-library(MASS)
-library(ggplot2)
-```
-
 ## Summary
 
-We have coded occupancy models using the very nice [available tutorials](https://ecol-stats.github.io/Occupancy-Models-in-INLA-/website/docs/) and they have been working fine so far. However, when using datasets with too many visits per year and site we observe that INLA crash almost systematically. Since repeated visits are key in occupancy models (the more replication, the better the estimation of detection probability), we are currently blocked by the fact models crash when including too many visits. Below you will find a code allowing to reproduce that bug. This code simulate datasets with different levels of replication and assess the likelihood of crashing when running INLA occupancy models.
+We have coded occupancy models using the very nice [available tutorials](https://ecol-stats.github.io/Occupancy-Models-in-INLA-/website/docs/) and they have been working fine so far. However, when using datasets with too many visits per year and site we observe that INLA crash almost systematically. Our large number of visits per year is linked to the fact that we use opportunistic dataset and not standardised surveys. Since repeated visits are key in occupancy models (the more replication, the better the estimation of detection probability), we are currently blocked by the fact models crash when including too many visits. Below you will find a code allowing to reproduce that bug. This code simulate datasets with different levels of replication and assess the likelihood of crashing when running INLA occupancy models.
 
 ## The occupancy model
 
@@ -54,10 +37,42 @@ Here, $z_{it}$ denotes the occupancy state in site $i$ for year $t$. $\psi_{it}$
 
 The response $y_{ijt}$ is the detection/non-detection data for site $i$, year $t$ and visit $j$, given $z_{it}$. The detection probabilities $p$ are defined on the logit scale as a linear function of $\alpha_0$ (Intercept).
 
+## The problem
+
+In our study case we have a maximal number of visits per year and site, K ($j=1,...,K$). Let's imagine our data are aggregated at month level, the maximal number of visits per year and site is $K=12$. However, since not all sites are monitored every months every year, then the number of realized visits ($K_{obs}$) depends on the year and site combination. In our simulations, we varied the average number of realized visits ($\overline{K}_{obs}$).
+
+When the average number of realized visits, $\overline{K}_{obs}$, increased, the probability of the model to crash sharply increased to reach one around $\overline{K}_{obs} = 3$. Below you will find a code allowing to reproduce that bug.
+
+## R and INLA versions
+
+Loading packages and showing R and INLA versions:
+```{r}
+#| echo: true
+#| message: false
+#| warning: false
+#| paged-print: true
+library(data.table)
+library(INLA)
+library(fmesher)
+library(raster)
+library(dplyr)
+library(sf)
+library(terra)
+library(spatstat.geom)
+library(MASS)
+library(ggplot2)
+
+R.version
+
+packageVersion("INLA")
+```
+
+
 ## Simulating data
 
 We first define an abitrary spatial domain to simulate data across that domain.
 
+ART: Approximate Running Time
 ```{r}
 # Define spatial domain
 win <- owin(c(0,10), c(0,10))
@@ -270,7 +285,7 @@ run_occupancy_model=function(det_tab){
 }
 ```
 
-We can run the function across all generated datasets.
+We can run the function across all generated datasets. (ART = 25 mn)
 
 ```{r}
 #| error: false
