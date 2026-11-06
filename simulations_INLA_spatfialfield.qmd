@@ -282,8 +282,8 @@ p1=ggplot(data=est_df,aes(x=occ_0_logit,y=mean))+
 
 		
 p3=ggplot(data=pred_df,aes(x=occ_0_logit,group=repli))+
-	stat_summary(aes(y=occupancy_est),color="black",alpha=0.7)+
-  stat_summary(aes(y=occupancy_logit),color="red",geom="point")+
+	stat_summary(aes(y=boot::inv.logit(occupancy_est)),color="black",alpha=0.7)+
+  stat_summary(aes(y=occupancy),color="red",geom="point")+
   ylab("Average occupancy probability")+
   ggtitle("b",subtitle="Overall occupancy estimation")
 
