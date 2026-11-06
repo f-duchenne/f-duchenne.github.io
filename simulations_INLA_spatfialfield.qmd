@@ -1,5 +1,5 @@
 ---
-title: "Occupancy models with INLA misestimated overall occupancy"
+title: "Occupancy models with INLA misestimate occupancy"
 format:
   html:
     toc: true
@@ -22,7 +22,7 @@ editor: visual
 
 ## Summary
 
-We have coded occupancy models using the very nice [available tutorials](https://ecol-stats.github.io/Occupancy-Models-in-INLA-/website/docs/) and they have been working fine so far. However, when simulating datasets with a high occupancy probability we observe that INLA models gave completly wrong estimates of the intercept and other parameters associated with the spatial field. Below you will find a code allowing to reproduce that bug. This code simulate datasets with different intercepts and assess parameters' estimation by INLA occupancy models.
+We have coded occupancy models using the very nice [available tutorials](https://ecol-stats.github.io/Occupancy-Models-in-INLA-/website/docs/) and they have been working fine so far. However, when simulating datasets with a high occupancy probability we observe that INLA models gave completly wrong estimates of the intercept and other parameters associated with the spatial field. Below you will find a code allowing to reproduce that bug. This code simulates datasets with different intercepts and assess parameters' estimation by INLA occupancy models.
 
 ## The occupancy model
 
@@ -145,7 +145,7 @@ for(occ_0_logit in seq(-5,5,by=0.5)){
 
 ## Fitting the model
 
-Now let's fit the model for each of the simulated datasets, with different intercepts:
+Now let's fit the model for each of the simulated dataset, with different intercepts:
 
 ```{r}
 #| error: false
@@ -213,10 +213,11 @@ for(n in 1:length(data_list)){
 
 ## Assessing the fit
 
+Now we can compare the simulated and model's estimation for the parameters that defined occupancy (the intercept and the spatial field parameters):
+
 ```{r}
 #| message: false
 #| warning: false
-
 
 pred_list=list()
 est_list=list()
@@ -270,9 +271,8 @@ Plot the fit for the models that did not crash only (might be incomplete if many
 #| warning: false
 #| fig-height: 8
 #| fig-cap: "Red dots shows the simulated values while black points (& error bars) show the average estimation from the INLA models."
-
 p1=ggplot(data=est_df,aes(x=occ_0_logit,y=mean))+
-  geom_pointrange(aes(ymin=lwr,ymax=upr),alpha=0.8)+
+  geom_pointrange(aes(ymin=lwr,ymax=upr),alpha=0.7)+
 	geom_point(aes(y=true_val),color="red")+
   ylab("Parameter value/estimation")+
   xlab("Simulated intercept")+
@@ -282,8 +282,8 @@ p1=ggplot(data=est_df,aes(x=occ_0_logit,y=mean))+
 
 		
 p3=ggplot(data=pred_df,aes(x=occ_0_logit,group=repli))+
-	stat_summary(aes(y=boot::inv.logit(occupancy_est)),color="black",alpha=0.7)+
-  stat_summary(aes(y=occupancy),color="red",geom="point")+
+	stat_summary(aes(y=occupancy_est),color="black",alpha=0.7)+
+  stat_summary(aes(y=occupancy_logit),color="red",geom="point")+
   ylab("Average occupancy probability")+
   ggtitle("b",subtitle="Overall occupancy estimation")
 
