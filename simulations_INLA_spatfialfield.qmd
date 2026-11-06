@@ -277,7 +277,7 @@ p1=ggplot(data=est_df,aes(x=occ_0_logit,y=mean))+
   ylab("Parameter value/estimation")+
   xlab("Simulated intercept")+
   ggtitle("a",subtitle="Parameter estimation")+
-  facet_wrap(~variable,labeller=labeller(variable = c(Int_occ="Intercept",
+  facet_wrap(~variable,scales="free_y",labeller=labeller(variable = c(Int_occ="Intercept",
                   range.nominal.1="Range (log)",variance.nominal.1="Sigma (log)")))
 
 		
