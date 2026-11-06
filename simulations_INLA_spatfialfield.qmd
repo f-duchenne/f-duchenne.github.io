@@ -1,5 +1,5 @@
 ---
-title: "Occupancy models with INLA crash when too many visits per period and sites"
+title: "Occupancy models with INLA misestimated overall occupancy"
 format:
   html:
     toc: true
@@ -70,9 +70,7 @@ packageVersion("INLA")
 
 ## Simulating data
 
-We first define an abitrary spatial domain to simulate data across that domain.
-
-ART: Approximate Running Time
+We first define an arbitrary spatial domain to simulate a spatial field representing variation in occupancy on the logit scale. Then we draw presences from that occupancy layer and detection and non-detection for each simulated visit. We then fitted the occupancy model using these detection and non-detection events only, to see the model could retrieve the simulated occupancy layer.
 
 ```{r}
 #| message: false
@@ -265,14 +263,16 @@ est_df=rbindlist(est_list)
 
 ```
 
-Plot the fit for the model that did not crash only (might be incomplete if many models crashed):
+Plot the fit for the models that did not crash only (might be incomplete if many models crashed):
 
 ```{r}
 #| message: false
 #| warning: false
-#| fig-height: 6
+#| fig-height: 8
+#| fig-cap: "Red dots shows the simulated values while black points (& error bars) show the average estimation from the INLA models."
+
 p1=ggplot(data=est_df,aes(x=occ_0_logit,y=mean))+
-  geom_pointrange(aes(ymin=lwr,ymax=upr))+
+  geom_pointrange(aes(ymin=lwr,ymax=upr),alpha=0.8)+
 	geom_point(aes(y=true_val),color="red")+
   ylab("Parameter value/estimation")+
   xlab("Simulated intercept")+
@@ -282,12 +282,10 @@ p1=ggplot(data=est_df,aes(x=occ_0_logit,y=mean))+
 
 		
 p3=ggplot(data=pred_df,aes(x=occ_0_logit,group=repli))+
-	stat_summary(aes(y=occupancy_logit),color="red",geom="point")+
-	stat_summary(aes(y=occupancy_est),color="black")+
+	stat_summary(aes(y=boot::inv.logit(occupancy_est)),color="black",alpha=0.7)+
+  stat_summary(aes(y=occupancy),color="red",geom="point")+
   ylab("Average occupancy probability")+
   ggtitle("b",subtitle="Overall occupancy estimation")
 
 plot_grid(p1,p3,align="hv",ncol=1)
 ```
-
-Red dots shows the simulated values while black points (& error bars) show the average estimation from the INLA models.
