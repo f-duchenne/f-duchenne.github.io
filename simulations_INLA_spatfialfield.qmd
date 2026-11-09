@@ -26,20 +26,20 @@ We have coded occupancy models using the very nice [available tutorials](https:/
 
 ## The occupancy model
 
-The occupancy model we will run here is a very simple model: a single year occupancy model with just a baseline detection probability in the observation model and an intercept + a spatial field in the state model.
+The occupancy model we will run here is a very simple model: a spatial occupancy model that is stationary across time, with just a baseline detection probability in the observation model and an intercept + a spatial field in the state model.
 
 **State model**
 
-$$z_{i} \sim \mathrm{Bernoulli}(\psi_{i})$$ $$\operatorname{logit}(\psi_{i}) = \beta_0 + \omega_i$$ **Observation model**\
-$$y_{ij} \mid z_{i} \sim \mathrm{Bernoulli}(z_{i}\times p_{ij})$$ $$ \operatorname{logit}(p_{ij}) = \alpha_0 $$
+$$z_{it} \sim \mathrm{Bernoulli}(\psi_{it})$$ $$\operatorname{logit}(\psi_{it}) = \beta_0 + \omega_i$$ **Observation model**\
+$$y_{ijt} \mid z_{it} \sim \mathrm{Bernoulli}(z_{it}\times p_{ijt})$$ $$ \operatorname{logit}(p_{ijt}) = \alpha_0 $$
 
-Here, $z_{i}$ denotes the occupancy state in site $i$. $\psi_{i}$ is the associated occupancy probability defined on the logit scale as a linear function of an intercept ($\beta_0$) and $\omega$, a spatial Gaussian random field describing the spatial structure in the data.
+Here, $z_{i}$ denotes the occupancy state in site $i$ and year $t$. $\psi_{it}$ is the associated occupancy probability defined on the logit scale as a linear function of an intercept ($\beta_0$) and $\omega$, a spatial Gaussian random field describing the spatial structure in the data.
 
-The response $y_{ij}$ is the detection/non-detection data for site $i$ and visit $j$, given $z_{i}$. The detection probabilities $p$ are defined on the logit scale as a linear function of $\alpha_0$ (Intercept).
+The response $y_{ijt}$ is the detection/non-detection data for site $i$, year $t$ and visit $j$, given $z_{it}$. The detection probabilities $p$ are defined on the logit scale as a linear function of $\alpha_0$ (Intercept).
 
 ## The problem
 
-In our simulation scenario, we simulated a spatial field of occupancy (on the logit scale) and we varied the intercept on that logit scale ($\beta_0$). This is supposed to be a simple easy case of estimation for the model, because even if we have only one year, thus one realization of the Bernouilli processes, we sample all sites of the studied area, thus we do not unsampled areas. In most of the cases model estimations were ok. However, when increasing $\beta_0$ above a given threshold ($\beta_0 > 2$, which means $\psi \approx 0.88$ ) then we observe that the model estimation degraded very quickly to become very bad.
+In our simulation scenario, we simulated a spatial field of occupancy (on the logit scale) and we varied the intercept on that logit scale ($\beta_0$). This is supposed to be a simple easy case of estimation for the model, because we have several draws (several years) of a stationary spatial field and we sample all sites of the studied area. In most of the cases model estimations were ok. However, when increasing $\beta_0$ above a given threshold ($\beta_0 > 2$, which means $\psi \approx 0.88$ ) then we observe that the model estimation degraded very quickly to become very bad.
 
 ## R and INLA versions
 
@@ -79,6 +79,7 @@ We first define an arbitrary spatial domain to simulate a spatial field represen
 nc <- 20 #number of grid cells acros latitude
 nr <- 20 #number of grid cells acros longitude, 20*20 means 400 sites
 nM <- 51 #maximal number of repeated visits, let's say 51 if we aggregate data at week level
+nT <- 5 #number of years
 occ_0_logit <- 0 #intercept of the model
 det_prob <- 0.2 #detection probability
 nrep_avg <- 5 #average number of repeated visits (1 repetition means 2 visits in a year per site)
@@ -107,14 +108,15 @@ spde <- inla.spde2.matern(mesh = mesh, alpha = 2)
 kappa0 <- sqrt(8) / range0
 tau0 <- 1 / (sqrt(4 * pi) * kappa0 * sigma0)
 Q <- inla.spde2.precision(spde, theta = c(log(tau0), log(kappa0)))
-spatial_field <- inla.qsample(n = 1, Q = Q)
-spatial_values <- as.vector(spatial_field[mesh$idx$loc, ])
 
-#let's generate many different datasets with different intercepts
+
 data_list=list()
 n <- 0
-for(occ_0_logit in seq(-5,5,by=0.5)){
-  for(j in 1:nrepli){
+for(j in 1:nrepli){
+  spatial_field <- inla.qsample(n = 1, Q = Q)
+  spatial_values <- as.vector(spatial_field[mesh$idx$loc, ])
+  #let's generate many different datasets with different intercepts
+  for(occ_0_logit in seq(-5,5,by=0.5)){
     n <- n+1
     #Now we can fit a model to that 
     tab=as.data.frame(Domain,xy=TRUE)
@@ -122,10 +124,14 @@ for(occ_0_logit in seq(-5,5,by=0.5)){
     tab$occ_0_logit=occ_0_logit
     tab$occupancy_logit=occ_0_logit+spatial_values
     tab$occupancy=boot::inv.logit(tab$occupancy_logit)
+    tab=do.call("rbind",replicate(nT,tab,simplify=FALSE))
+    tab$year=rep(1:nT,each=nc*nr)
     tab$presence=rbinom(size=1,n=nrow(tab),prob=tab$occupancy)
     tab$nrep=1+rnbinom(nrow(tab),mu=nrep_avg,size=5)
     tab$nrep[tab$nrep>=nM]=nM
     tab$repli=j
+    ggplot(data=tab,aes(x=x,y=y,fill=occupancy))+geom_tile()+scale_fill_viridis()+
+      coord_fixed(ratio=1,expand=FALSE)+theme_bw()+theme(panel.grid=element_blank())
     
     det_tab=do.call("rbind",lapply(1:nrow(tab),
     			function(x){do.call("rbind",replicate(tab$nrep[x], tab[x,],simplify=FALSE))}))
