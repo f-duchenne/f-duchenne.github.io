@@ -82,7 +82,7 @@ nM <- 51 #maximal number of repeated visits, let's say 51 if we aggregate data a
 nT <- 5 #number of years
 occ_0_logit <- 0 #intercept of the model
 det_prob <- 0.2 #detection probability
-nrep_avg <- 5 #average number of repeated visits (1 repetition means 2 visits in a year per site)
+nrep_avg <- 5 #average number of visits
 # Range and sigma0 define the spatial field:
 sigma0 <- 1 
 range0 <- 5
@@ -127,12 +127,12 @@ for(j in 1:nrepli){
     tab=do.call("rbind",replicate(nT,tab,simplify=FALSE))
     tab$year=rep(1:nT,each=nc*nr)
     tab$presence=rbinom(size=1,n=nrow(tab),prob=tab$occupancy)
-    tab$nrep=1+rnbinom(nrow(tab),mu=nrep_avg,size=5)
+    tab$nrep=rnbinom(nrow(tab),mu=nrep_avg,size=1)
     tab$nrep[tab$nrep>=nM]=nM
     tab$repli=j
     ggplot(data=tab,aes(x=x,y=y,fill=occupancy))+geom_tile()+scale_fill_viridis()+
       coord_fixed(ratio=1,expand=FALSE)+theme_bw()+theme(panel.grid=element_blank())
-    
+    tab=subset(tab,nrep!=0)
     det_tab=do.call("rbind",lapply(1:nrow(tab),
     			function(x){do.call("rbind",replicate(tab$nrep[x], tab[x,],simplify=FALSE))}))
     
