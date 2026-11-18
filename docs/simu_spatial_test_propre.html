@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Bias in intecerpt when running INLA occupancy models with spatial autocorrelation</title>
+<title>Biased intercepts when running INLA occupancy models with spatial autocorrelation</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -111,8 +111,11 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#model-fit" id="toc-model-fit" class="nav-link active" data-scroll-target="#model-fit">Model fit</a></li>
-  <li><a href="#potting-the-results" id="toc-potting-the-results" class="nav-link" data-scroll-target="#potting-the-results">Potting the results</a></li>
+  <li><a href="#r-and-inla-version" id="toc-r-and-inla-version" class="nav-link active" data-scroll-target="#r-and-inla-version">R and INLA version</a></li>
+  <li><a href="#context" id="toc-context" class="nav-link" data-scroll-target="#context">Context</a></li>
+  <li><a href="#data-simulation" id="toc-data-simulation" class="nav-link" data-scroll-target="#data-simulation">Data simulation</a></li>
+  <li><a href="#model-fit" id="toc-model-fit" class="nav-link" data-scroll-target="#model-fit">Model fit</a></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a></li>
   </ul>
 </nav>
 </div>
@@ -122,7 +125,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Bias in intecerpt when running INLA occupancy models with spatial autocorrelation</h1>
+<h1 class="title">Biased intercepts when running INLA occupancy models with spatial autocorrelation</h1>
 </div>
 
 
@@ -139,7 +142,8 @@ window.Quarto = {
 </header>
 
 
-<p>##R and INLA version</p>
+<section id="r-and-inla-version" class="level2">
+<h2 class="anchored" data-anchor-id="r-and-inla-version">R and INLA version</h2>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>               _                                
@@ -163,7 +167,9 @@ nickname       [Not] Part in a Rumble           </code></pre>
 <pre><code>[1] '26.9.17'</code></pre>
 </div>
 </div>
-<p>##Context</p>
+</section>
+<section id="context" class="level2">
+<h2 class="anchored" data-anchor-id="context">Context</h2>
 <p>We are using site-occupancy models to analyse large databases of occurences such as GBIF. We wanted to use the very nice implementation of spatial autocorrelation in INLA (Rue/lingrdren ?)</p>
 <p>We use the available vignettes, but we identified a systematic bias when modelling spatial autocorrelation : the estimated spatial field often has a non-null average (uncentered spatial field), which bias the estimate of the intercept. Although the sum of both remain well estimated, this might be a problem in some context. So we would like to advertise that potential problem.</p>
 <p>We start by using the simplest occupancy model possible, where <span class="math inline">\(z_{i,t}\)</span> represents the presence of a species at year <span class="math inline">\(t\)</span> and site <span class="math inline">\(i\)</span>.</p>
@@ -215,7 +221,9 @@ nickname       [Not] Part in a Rumble           </code></pre>
 </div>
 </div>
 </div>
-<p>##Data simulation</p>
+</section>
+<section id="data-simulation" class="level2">
+<h2 class="anchored" data-anchor-id="data-simulation">Data simulation</h2>
 <p>We simulate datasets with the parameters fixed above. First, the occupancy is computed on natural scale, then it is tranformed to the probability scale, and binary outcomes are drawn from this probability. The detections are simulated in the same way.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulating datasets</span></span>
@@ -435,6 +443,7 @@ nickname       [Not] Part in a Rumble           </code></pre>
 </div>
 </div>
 </div>
+</section>
 <section id="model-fit" class="level2">
 <h2 class="anchored" data-anchor-id="model-fit">Model fit</h2>
 <p>We also have a function to fit the occupancy model to each dataset and extract outputs.</p>
@@ -555,8 +564,8 @@ nickname       [Not] Part in a Rumble           </code></pre>
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(results_param)[<span class="dv">3</span><span class="sc">:</span><span class="dv">5</span>]<span class="ot">=</span><span class="fu">c</span>(<span class="st">"lwr"</span>,<span class="st">"mdeian"</span>,<span class="st">"upr"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="potting-the-results" class="level2">
-<h2 class="anchored" data-anchor-id="potting-the-results">Potting the results</h2>
+<section id="results" class="level2">
+<h2 class="anchored" data-anchor-id="results">Results</h2>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>pl1<span class="ot">=</span><span class="fu">ggplot</span>(<span class="at">data=</span>results_param)<span class="sc">+</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>(<span class="fu">aes</span>(<span class="at">x=</span>prob_psi,<span class="at">y=</span>mean,<span class="at">ymin=</span>lwr,<span class="at">ymax=</span>upr),<span class="at">color=</span><span class="st">"green"</span>)<span class="sc">+</span></span>
@@ -574,9 +583,10 @@ nickname       [Not] Part in a Rumble           </code></pre>
 <span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>cowplot<span class="sc">::</span><span class="fu">plot_grid</span>(pl1,bottom,<span class="at">ncol=</span><span class="dv">1</span>,<span class="at">align=</span><span class="st">"hv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="simu_spatial_test_propre_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Estimated (green) versus simulated (black) values for different model outputs (coefficients or predicts).</figcaption>
 </figure>
 </div>
 </div>
