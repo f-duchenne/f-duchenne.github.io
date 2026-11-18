@@ -108,6 +108,12 @@ spde <- inla.spde2.matern(mesh = mesh, alpha = 2)
 kappa0 <- sqrt(8) / range0
 tau0 <- 1 / (sqrt(4 * pi) * kappa0 * sigma0)
 Q <- inla.spde2.precision(spde, theta = c(log(tau0), log(kappa0)))
+spatial_field <- inla.qsample(n = 1, Q = Q)
+spatial_values <- as.vector(spatial_field[mesh$idx$loc, ])
+mean(spatial_values)
+
+
+
 
 
 data_list=list()
@@ -171,6 +177,7 @@ spde <- inla.spde2.pcmatern(mesh = mesh,
 # index set; "spatialfield" is the name used in the model formula
 iset_sp <- inla.spde.make.index(name = "spatialfield", 
                                 n.spde =  spde$n.spde)
+
 model_list=list()
 for(n in 1:length(data_list)){
   matrix_spat=data_list[[n]]
@@ -283,8 +290,7 @@ p1=ggplot(data=est_df,aes(x=occ_0_logit,y=mean))+
   ylab("Parameter value/estimation")+
   xlab("Simulated intercept")+
   ggtitle("a",subtitle="Parameter estimation")+
-  facet_wrap(~variable,scales="free_y",labeller=labeller(variable = c(Int_occ="Intercept",
-                  range.nominal.1="Range (log)",variance.nominal.1="Sigma (log)")))
+  facet_wrap(~variable,scales="free_y",labeller=labeller(variable = c(Int_occ="Intercept", range.nominal.1="Range (log)",variance.nominal.1="Sigma (log)")))
 
 		
 p3=ggplot(data=pred_df,aes(x=occ_0_logit,group=repli))+
