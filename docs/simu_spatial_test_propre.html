@@ -553,7 +553,7 @@ nickname       [Not] Part in a Rumble           </code></pre>
 <span id="cb7-103"><a href="#cb7-103" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-104"><a href="#cb7-104" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>We can then fit the occupancy models and plot the results. We observe than when intercept is a bit high the mean of the spatial field start to be badly estimated, slightly biasing the intercept of the model. However, temporal trend seems to remain unbiased.</p>
+<p>We can thus fit the occupancy models.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the results </span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>all_results <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="fu">unlist</span>(list_dataset, <span class="at">recursive=</span><span class="cn">FALSE</span>), analyse_dataset_simple, <span class="at">max_edge =</span> max_edge, <span class="at">range =</span> range, <span class="at">sigma_m =</span> sigma_m, <span class="at">prob_p =</span> prob_p)</span>
@@ -566,6 +566,7 @@ nickname       [Not] Part in a Rumble           </code></pre>
 </section>
 <section id="results" class="level2">
 <h2 class="anchored" data-anchor-id="results">Results</h2>
+<p>We observe than when intercept is a bit high the mean of the spatial field start to be badly estimated, slightly biasing the intercept of the model. However, temporal trend seems to remain unbiased.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>pl1<span class="ot">=</span><span class="fu">ggplot</span>(<span class="at">data=</span>results_param)<span class="sc">+</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>(<span class="fu">aes</span>(<span class="at">x=</span>prob_psi,<span class="at">y=</span>mean,<span class="at">ymin=</span>lwr,<span class="at">ymax=</span>upr),<span class="at">color=</span><span class="st">"green"</span>)<span class="sc">+</span></span>
@@ -587,6 +588,39 @@ nickname       [Not] Part in a Rumble           </code></pre>
 <figure class="figure">
 <p><img src="simu_spatial_test_propre_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
 <figcaption>Estimated (green) versus simulated (black) values for different model outputs (coefficients or predicts).</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Looking at the estimation error of the intercept allows to better visualize the problem:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span><span class="fu">subset</span>(results_param,param<span class="sc">==</span><span class="st">"Intercept"</span>))<span class="sc">+</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>(<span class="fu">aes</span>(<span class="at">x=</span>prob_psi,<span class="at">y=</span>mean<span class="sc">-</span>true_val,<span class="at">ymin=</span>lwr<span class="sc">-</span>true_val,<span class="at">ymax=</span>upr<span class="sc">-</span>true_val),<span class="at">color=</span><span class="st">"green"</span>)<span class="sc">+</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept=</span><span class="dv">0</span>, <span class="at">linetype=</span><span class="st">"dashed"</span>,<span class="at">color=</span><span class="st">"black"</span>)<span class="sc">+</span><span class="fu">ylab</span>(<span class="st">"Error on intercept estimation"</span>)<span class="sc">+</span><span class="fu">xlab</span>(<span class="st">"Simulated Intercept (logit scale)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="simu_spatial_test_propre_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Error in estimated intercepts.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Although 0 remains within the 95% confidence interval, there is a clear tendency to over or under-estimate the intercept when it is low and high, respectively. However, once considering intercept and spatial field together this disappears, suggesting that intercept should not be interpreted alone but always in combination with the spatial field.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span><span class="fu">subset</span>(results_param,param<span class="sc">==</span><span class="st">"Intercept"</span>))<span class="sc">+</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>(<span class="fu">aes</span>(<span class="at">x=</span>prob_psi<span class="sc">+</span>true_spatfield_mean,</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">y=</span>(mean<span class="sc">+</span>spatfield_mean)<span class="sc">-</span>(true_val<span class="sc">+</span>true_spatfield_mean),</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">ymin=</span>lwr<span class="sc">+</span>spatfield_mean<span class="sc">-</span>(true_val<span class="sc">+</span>true_spatfield_mean),</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">ymax=</span>upr<span class="sc">+</span>spatfield_mean<span class="sc">-</span>(true_val<span class="sc">+</span>true_spatfield_mean)),</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>                  <span class="at">color=</span><span class="st">"green"</span>)<span class="sc">+</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept=</span><span class="dv">0</span>, <span class="at">linetype=</span><span class="st">"dashed"</span>,<span class="at">color=</span><span class="st">"black"</span>)<span class="sc">+</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Error on intercept+spatial field estimation"</span>)<span class="sc">+</span><span class="fu">xlab</span>(<span class="st">"Simulated Intercept (logit scale)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="simu_spatial_test_propre_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Error in intercepts + mean of the spatial field .</figcaption>
 </figure>
 </div>
 </div>
